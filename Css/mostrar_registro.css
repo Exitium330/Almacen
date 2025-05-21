@@ -1,0 +1,468 @@
+/* Estilos generales del cuerpo para consistencia */
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f7f6;
+    color: #333;
+    min-height: 100vh;
+}
+
+/* Estilo para el título principal */
+h2 {
+    text-align: center;
+    color: #2e7d32;
+    margin-bottom: 20px; /* Mantener o ajustar si quieres menos espacio debajo del título */
+    font-weight: 700;
+}
+
+/* Contenedor de búsqueda y botón de volver */
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px; /* Espacio debajo del contenedor de búsqueda */
+    padding: 10px 0;
+    flex-wrap: wrap;
+    gap: 15px;
+    /* *** AJUSTE PARA MOVERLO MÁS ARRIBA *** */
+    margin-top: -80px; /* Un margen superior negativo para subirlo visualmente */
+    position: relative; /* Podría ser necesario para el z-index si hay elementos por encima */
+    z-index: 1; /* Asegurarse de que esté por encima de otros elementos si se solapan */
+}
+
+/* Campo de búsqueda */
+#searchInput {
+    padding: 10px 15px;
+    border: 1px solid #bdbdbd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    flex-grow: 1;
+    max-width: 300px;
+}
+
+#searchInput:focus {
+    outline: none;
+    border-color: #4caf50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+/* Botón de volver */
+.back-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #757575;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: background-color 0.3s ease-in-out;
+    border: none;
+    cursor: pointer;
+}
+
+.back-btn:hover {
+    background-color: #5a5a5a;
+}
+
+/* --- Estilos para la tabla responsiva --- */
+
+/* Contenedor para la tabla que limita el ancho y permite desplazamiento horizontal */
+.table-container {
+    width: 100%;
+    max-width: 1100px; /* *** ANCHO MÁXIMO AUMENTADO AQUÍ *** */
+    margin: 20px auto; /* Centrado horizontalmente y margen superior */
+    overflow-x: auto;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* La tabla en sí */
+#instructorsTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    /* min-width: 700px; */
+}
+
+/* Cabecera de la tabla */
+#instructorsTable th {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+/* Celdas de la tabla */
+#instructorsTable td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #dddddd;
+    vertical-align: middle;
+    word-break: break-word;
+}
+
+/* Filas impares */
+#instructorsTable tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+/* Efecto hover en filas */
+#instructorsTable tbody tr:hover {
+    background-color: #f0f0f0;
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Estilos para los botones de acción */
+#instructorsTable td button {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease-in-out;
+    margin-right: 5px;
+}
+
+#instructorsTable td button:last-child {
+    margin-right: 0;
+}
+
+/* Botón Editar */
+#instructorsTable td a button {
+    background-color: #81c784;
+    color: #333;
+}
+
+#instructorsTable td a button:hover {
+     background-color: #66bb6a;
+}
+
+/* Botón Eliminar */
+#instructorsTable td form button[type="submit"] {
+    background-color: #e57373;
+    color: white;
+}
+
+#instructorsTable td form button[type="submit"]:hover {
+    background-color: #ef5350;
+}
+
+/* Mensaje de "No hay instructores" */
+.table-container p {
+     text-align: center;
+     margin-top: 20px;
+     font-size: 1.1rem;
+     color: #555;
+}
+
+
+/* --- Estilos para el Modal de Edición --- */
+
+/* Overlay: Posicionamiento fijo y cubre la pantalla */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 990;
+    overflow: auto;
+}
+
+/* Contenido del Modal: Posicionamiento Fijo y Centrado */
+.edit-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+
+    background-color: #ffffff;
+    width: 90%;
+    max-width: 450px;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    font-family: 'Roboto', sans-serif;
+    border: none;
+
+    max-height: 95vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+    margin: 20px;
+}
+
+.edit-popup h2 {
+    color: #388e3c;
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.edit-popup form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.edit-popup label {
+    color: #555;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.edit-popup input[type="text"],
+.edit-popup input[type="email"],
+.edit-popup select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.edit-popup input[type="text"]:focus,
+.edit-popup input[type="email"]:focus,
+.edit-popup select:focus {
+    border-color: #4caf50;
+    outline: none;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+.edit-popup button[type="submit"] {
+    background-color: #4caf50;
+    color: #ffffff;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease-in-out;
+    margin-top: 10px;
+}
+
+.edit-popup button[type="submit"]:hover {
+    background-color: #388e3c;
+}
+
+.edit-popup a {
+    color: #757575;
+    text-decoration: none;
+    text-align: center;
+    display: block;
+    font-size: 1rem;
+    margin-top: 15px;
+    transition: color 0.3s ease-in-out;
+}
+
+.edit-popup a:hover {
+    color: #2e7d32;
+}
+
+
+/* --- Estilos para Notificaciones --- */
+.notification {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: opacity 0.5s ease-in-out;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    max-width: 350px;
+    text-align: center;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    opacity: 1;
+}
+.notification.success {
+    background-color: #4CAF50;
+    color: white;
+}
+.notification.error {
+    background-color: #f44336;
+    color: white;
+}
+.notification.fade-out {
+    opacity: 0;
+}
+
+
+/* --- Estilos para Modo Oscuro --- */
+body.dark-mode {
+    background-color: #1e1e1e;
+    color: #eee;
+}
+
+body.dark-mode .table-container {
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode table {
+    background-color: #333;
+    color: #181010;
+}
+
+body.dark-mode th {
+    background-color: #555;
+    color: #fff;
+}
+
+body.dark-mode td {
+    border-bottom-color: #555;
+}
+
+body.dark-mode tbody tr:nth-child(odd) {
+    background-color: #444;
+}
+
+body.dark-mode tbody tr:hover {
+    background-color: #666;
+}
+
+body.dark-mode .edit-popup {
+    background-color: #444;
+    color: #eee;
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .edit-popup h2 {
+    color: #a5d6a7;
+}
+
+body.dark-mode .edit-popup label {
+    color: #bbb;
+}
+
+body.dark-mode .edit-popup input[type="text"],
+body.dark-mode .edit-popup input[type="email"],
+body.dark-mode .edit-popup select {
+    background-color: #555;
+    color: #2c1d1d;
+    border-color: #666;
+}
+body.dark-mode .edit-popup input[type="text"]:focus,
+body.dark-mode .edit-popup input[type="email"]:focus,
+body.dark-mode .edit-popup select:focus {
+    border-color: #81c784;
+}
+
+body.dark-mode .edit-popup button[type="submit"] {
+    background-color: #66bb6a;
+}
+
+body.dark-mode .edit-popup button[type="submit"]:hover {
+    background-color: #81c784;
+}
+
+body.dark-mode .edit-popup a {
+    color: #bbb;
+}
+
+body.dark-mode .edit-popup a:hover {
+    color: #a5d6a7;
+}
+
+body.dark-mode .notification.success {
+    background-color: #66bb6a;
+    color: #1e1e1e;
+}
+
+body.dark-mode .notification.error {
+    background-color: #ef5350;
+    color: #1e1e1e;
+}
+
+body.dark-mode .search-container input {
+    background-color: #555;
+    color: #eee;
+    border-color: #666;
+}
+
+body.dark-mode .search-container input:focus {
+    border-color: #81c784;
+}
+
+body.dark-mode .back-btn {
+    background-color: #555;
+}
+body.dark-mode .back-btn:hover {
+    background-color: #777;
+}
+
+body.dark-mode #instructorsTable td a button {
+    background-color: #66bb6a;
+    color: #1e1e1e;
+}
+body.dark-mode #instructorsTable td a button:hover {
+    background-color: #81c784;
+}
+
+body.dark-mode #instructorsTable td form button[type="submit"] {
+    background-color: #ef5350;
+    color: #1e1e1e;
+}
+
+body.dark-mode #instructorsTable td form button[type="submit"]:hover {
+    background-color: #e57373;
+}
+
+/* Media query para pantallas pequeñas */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .search-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        margin-top: 0; /* Eliminar margen negativo en pantallas pequeñas */
+    }
+
+     #searchInput {
+         max-width: 100%;
+         margin-right: 0;
+     }
+
+    .back-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+     #instructorsTable th,
+     #instructorsTable td {
+         padding: 10px; /* Considerar mantener este padding o ajustarlo */
+     }
+
+    .edit-popup {
+        width: 95%;
+        max-width: 95%;
+        padding: 20px;
+        margin: 10px;
+    }
+
+    .edit-popup h2 {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    .edit-popup form {
+        gap: 10px;
+    }
+
+    .edit-popup button[type="submit"] {
+         padding: 10px;
+    }
+}

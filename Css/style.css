@@ -1,0 +1,794 @@
+/* Estilos existentes al inicio */
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    /* overflow: hidden; /* Ajustado abajo */
+}
+
+body {
+    background-color: #f0f5f1; /* Fondo en modo claro */
+    color: black;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark-mode {
+    background-color: #222831; /* Fondo en modo oscuro */
+    color: white;
+}
+
+/* Ajuste para permitir scroll si el contenido excede la pantalla */
+html, body {
+    overflow-y: auto !important; /* Permite scroll vertical */
+    overflow-x: hidden !important; /* Oculta scroll horizontal si no es necesario */
+}
+
+/* El resto de tus estilos existentes */
+
+.wrapper {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* overflow: hidden; /* Puede ser innecesario si body tiene overflow: auto */
+}
+
+.main-content {
+    flex: 1 0 auto;
+    display: flex;
+    /* overflow: hidden; /* Puede ser innecesario */
+}
+
+.sidebar {
+    width: 250px;
+    background: #2a7a2a;
+    color: white;
+    padding: 20px;
+    /* height: 100vh; /* Considera usar height: 100% si el contenido es largo */
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0; /* Extender hasta el fondo si es fixed */
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    overflow-y: auto; /* Permitir scroll interno si el menú es largo */
+    overflow-x: hidden;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 15px 0;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    display: block;
+    padding: 12px;
+    border-radius: 8px;
+    transition: 0.3s ease-in-out;
+}
+
+.sidebar ul li a:hover {
+    background: #45a045;
+    transform: scale(1.05);
+}
+
+.content {
+    margin-left: 270px; /* Espacio para el sidebar fijo */
+    padding: 40px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* overflow: hidden; /* Puede ser innecesario */
+    margin-bottom: 50px; /* Espacio para el footer fijo */
+}
+
+.carousel-container {
+    width: 100%;
+    max-width: 600px;
+    overflow: hidden;
+    border-radius: 15px;
+    margin-top: 20px;
+    position: relative;
+}
+
+.carousel {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    width: 50%; /* Esto puede necesitar ajuste dependiendo del número de imágenes y cómo quieras que se vean */
+}
+
+.carousel img {
+    width: 100%; /* Cada imagen ocupa el 100% del contenedor flexible */
+    height: auto; /* Mantiene la proporción */
+    object-fit: cover;
+    flex-shrink: 0; /* Evita que las imágenes se encojan */
+}
+
+.pie {
+    text-align: center;
+    padding: 15px;
+    background: #2a7a2a;
+    color: white;
+    font-size: 14px;
+    width: 100%;
+    height: 50px;
+    box-sizing: border-box;
+    position: fixed; /* Fijamos el footer en la parte inferior */
+    bottom: 0;
+    left: 0;
+    /* Ajustar padding-left para no estar bajo el sidebar */
+    padding-left: 270px; /* Espacio del sidebar */
+}
+
+
+/* Estilos Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative; /* Cambiar a relative en móvil */
+        padding: 15px;
+        box-shadow: none; /* Quitar sombra */
+        overflow-y: visible; /* Permitir ver todo el menú */
+         bottom: auto; /* Quitar bottom fijo */
+    }
+
+    .sidebar ul {
+         display: flex; /* Opcional: menús en línea en móvil */
+         flex-wrap: wrap;
+         justify-content: center;
+    }
+
+    .sidebar ul li {
+        margin: 5px 10px; /* Ajustar margen en línea */
+    }
+
+    .sidebar ul li a {
+         padding: 8px 12px; /* Ajustar padding */
+         font-size: 16px;
+    }
+
+
+    .content {
+        margin-left: 0; /* Quitar margen izquierdo */
+        padding: 20px;
+        margin-bottom: 50px; /* Espacio para el footer en modo responsive */
+    }
+
+     .pie {
+        padding-left: 0; /* Quitar padding izquierdo en móvil */
+     }
+
+    .carousel-container {
+        width: 90%;
+    }
+
+    .main-content {
+        min-height: auto;
+    }
+
+    /* Ajuste para el botón de gestión en móvil si es necesario, aunque fixed top/right suele funcionar */
+     .sesiones-container {
+         top: 5px; /* Ajustar posición si la cabecera cambia en móvil */
+         right: 5px;
+     }
+}
+
+
+/* Estilos Modo Oscuro */
+body.dark-mode .sidebar {
+    background: #1b5e1b; /* Tono oscuro del verde */
+}
+
+body.dark-mode .pie {
+     background: #1b5e1b; /* Tono oscuro del verde */
+}
+
+button { /* Estilo general para botones */
+    background-color: #2a7a2a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+     background-color: #45a045;
+}
+
+
+body.dark-mode button {
+    background-color: #1b5e1b;
+    color: white;
+}
+body.dark-mode button:hover {
+     background-color: #2e7d32;
+}
+
+
+.animacion-boton { /* Si usas esta clase para alguna animación */
+    transform: scale(1.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.logout-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #c41a1a; /* Rojo */
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 8px;
+    text-align: center;
+    transition: 0.3s;
+    box-shadow: 0 0 10px rgba(175, 42, 42, 0.8);
+     margin-top: 20px; /* Espacio arriba si está al final del sidebar */
+}
+
+.logout-btn:hover {
+    background-color: #ff4c4c; /* Rojo más claro */
+    border-color: #d32f2f;
+    box-shadow: 0 0 15px rgba(255, 76, 76, 1);
+    transform: scale(1.02);
+}
+
+.user-info {
+    background-color: #34495e; /* Gris oscuro */
+    border-radius: 8px;
+    padding: 6px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+}
+
+body.dark-mode .user-info {
+    background-color: #455a64; /* Gris azulado oscuro en modo oscuro */
+}
+
+
+.user-info span#username {
+    color: #66ff00; /* Verde brillante */
+    font-weight: bold;
+    font-size: 16px;
+}
+
+
+/* --- Estilos Adaptados para el Enlace de Gestión en la Esquina --- */
+
+/* Contenedor posicionado (ya existía) */
+.sesiones-container {
+    position: fixed;
+    top: 10px; /* Distancia desde arriba */
+    right: 10px; /* Distancia desde la derecha */
+    font-family: 'Poppins', sans-serif;
+    z-index: 5000; /* Asegurar que esté por encima de todo */
+    /* Los estilos para .sesiones-btn y .sesiones-menu DENTRO de este contenedor ya no aplican al enlace */
+    /* Puedes eliminar o comentar las reglas CSS que empezaban con .sesiones-container .sesiones-btn */
+    /* y las reglas para .sesiones-menu si solo se usaban para el menú del botón "Almacenistas Activos" */
+}
+
+/* Estilo para el enlace <a class="gestion-link"> dentro de .sesiones-container */
+.sesiones-container .gestion-link {
+    background-color: #4caf50; /* Verde - Color de fondo */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    padding: 8px 16px; /* Espaciado interno (arriba/abajo, izquierda/derecha) */
+    border-radius: 4px; /* Esquinas redondeadas */
+    cursor: pointer; /* Cambiar cursor a puntero */
+    font-size: 14px; /* Tamaño de fuente */
+    text-decoration: none; /* Quitar el subrayado por defecto de los enlaces */
+    display: inline-block; /* Para que el padding y los márgenes funcionen correctamente */
+    transition: background-color 0.3s ease; /* Transición suave del color de fondo */
+}
+
+.sesiones-container .gestion-link:hover {
+    background-color: #388e3c; /* Verde más oscuro al pasar el ratón */
+}
+
+/* Adaptación para modo oscuro para el enlace */
+body.dark-mode .sesiones-container .gestion-link {
+     background-color: #388e3c; /* Verde más oscuro para modo oscuro */
+     color: white; /* Asegurar color en modo oscuro */
+}
+
+body.dark-mode .sesiones-container .gestion-link:hover {
+    background-color: #2e7d32; /* Verde aún más oscuro */
+}
+
+
+/* --- Estilos del menú desplegable (si todavía lo usas en otra parte) --- */
+/* Si el antiguo menú desplegable de "Almacenistas Activos" era el único que usaba estas clases,
+   puedes eliminar o comentar el siguiente bloque y los relacionados. */
+.sesiones-menu {
+    display: none; /* Por defecto oculto */
+    position: absolute; /* Posicionamiento relativo a .sesiones-container */
+    top: 40px; /* Distancia desde el borde superior de .sesiones-container */
+    right: 0; /* Alineado a la derecha de .sesiones-container */
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    max-width: 350px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 3000; /* Por encima de la mayoría de los elementos, pero quizás por debajo del contenedor principal */
+}
+
+.sesiones-menu.active {
+    display: block; /* Mostrar cuando tiene la clase 'active' */
+}
+
+.sesiones-menu h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #2e7d32;
+}
+
+.sesiones-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 150px; /* Limitar altura y añadir scroll */
+    overflow-y: auto;
+}
+
+.sesiones-menu li {
+    font-size: 14px;
+    color: #424242;
+    margin-bottom: 5px;
+    padding-bottom: 3px;
+    border-bottom: 1px dashed #eee; /* Separador */
+}
+
+.sesiones-menu li:last-child {
+    border-bottom: none; /* Sin separador en el último ítem */
+}
+
+
+.sesiones-menu li span {
+    display: block; /* La hora debajo del nombre */
+    font-size: 12px;
+    color: #757575;
+}
+
+.sesiones-menu li .hora-cierre {
+    color: #d32f2f; /* Rojo para hora de cierre si aplica */
+    font-weight: bold;
+}
+
+.sesiones-menu .no-activos {
+    color: #757575;
+    font-style: italic;
+    text-align: center;
+    padding: 10px 0;
+}
+
+/* Ajustes para modo oscuro del menú desplegable */
+body.dark-mode .sesiones-menu {
+    background-color: #333;
+    border-color: #555;
+}
+
+body.dark-mode .sesiones-menu h3 {
+    color: #66bb6a;
+}
+
+body.dark-mode .sesiones-menu li {
+    color: #ddd;
+    border-bottom-color: #555;
+}
+
+body.dark-mode .sesiones-menu li span {
+    color: #bbb;
+}
+
+body.dark-mode .sesiones-menu li .hora-cierre {
+    color: #ff5252; /* Rojo claro en modo oscuro */
+}
+
+body.dark-mode .sesiones-menu .no-activos {
+    color: #bbb;
+}
+
+/* --- Estilos para las Tarjetas del Dashboard --- */
+
+/* Contenedor de las tarjetas para layout */
+.cards-container {
+    display: flex; /* Para poner las tarjetas en fila */
+    gap: 20px; /* Espacio entre las tarjetas */
+    margin-top: 30px; /* Espacio arriba del contenedor */
+    flex-wrap: wrap; /* Permite que las tarjetas se envuelvan en pantallas pequeñas */
+    justify-content: center; /* Centra las tarjetas si no llenan la fila */
+    width: 100%; /* Ocupa todo el ancho disponible */
+    max-width: 900px; /* Opcional: limitar el ancho máximo */
+}
+
+/* Estilo base para cada tarjeta */
+.card {
+    background-color: #ffffff; /* Fondo blanco */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    display: flex;
+    align-items: center; /* Alinea verticalmente el icono y la info */
+    min-width: 250px; /* Ancho mínimo para la tarjeta */
+    flex: 1; /* Permite que las tarjetas crezcan y se encojan */
+    max-width: 350px; /* Ancho máximo para la tarjeta */
+    transition: transform 0.3s ease; /* Animación al pasar el ratón */
+}
+
+.card:hover {
+    transform: translateY(-5px); /* Efecto de elevación al pasar el ratón */
+}
+
+/* Estilo del icono dentro de la tarjeta */
+.card-icon {
+    font-size: 40px; /* Tamaño del icono */
+    margin-right: 15px; /* Espacio a la derecha del icono */
+    color: #2a7a2a; /* Color del icono (verde) */
+    /* Opcional: color de fondo para el icono */
+    /* background-color: #e8f5e9; */
+    /* padding: 10px; */
+    /* border-radius: 50%; */
+}
+
+/* Estilo para la información de la tarjeta (título y valor) */
+.card-info {
+    flex-grow: 1; /* Permite que ocupe el espacio restante */
+}
+
+.card-title {
+    font-size: 16px;
+    color: #555; /* Color de texto más oscuro */
+    margin-bottom: 5px;
+}
+
+.card-value {
+    font-size: 28px; /* Tamaño grande para el número */
+    font-weight: bold;
+    color: #333; /* Color de texto principal */
+}
+
+/* Estilo específico para la tarjeta de Stock Bajo */
+.low-stock-card {
+    background-color: #fff9c4; /* Fondo amarillo suave */
+    /* Opcional: borde izquierdo de color */
+    /* border-left: 5px solid #ffab00; /* Naranja/Ámbar */
+}
+
+.low-stock-card .card-icon {
+    color: #ffb300; /* Color naranja para el icono de alerta */
+}
+
+.low-stock-card .card-value {
+    color: #f57f17; /* Color naranja oscuro para el número de stock bajo */
+}
+
+/* Estilo para el enlace "Ver ítems" en la tarjeta de Stock Bajo */
+.card-link {
+    display: block; /* Asegura que ocupe su propia línea */
+    margin-top: 10px;
+    text-align: right;
+    font-size: 14px;
+    color: #1a73e8; /* Color de enlace típico de Google */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.card-link:hover {
+    color: #0d47a1; /* Color más oscuro al pasar el ratón */
+    text-decoration: underline;
+}
+
+/* --- Adaptaciones para Modo Oscuro --- */
+body.dark-mode .card {
+    background-color: #343a40; /* Fondo oscuro para las tarjetas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .card-icon {
+    color: #66bb6a; /* Verde más claro en modo oscuro */
+}
+
+body.dark-mode .card-title {
+    color: #ccc; /* Texto más claro en modo oscuro */
+}
+
+body.dark-mode .card-value {
+    color: #eee; /* Texto principal más claro en modo oscuro */
+}
+
+body.dark-mode .low-stock-card {
+     background-color: #5a4f00; /* Fondo amarillo oscuro para la alerta */
+     /* border-left-color: #ffa000; /* Naranja oscuro */
+}
+
+body.dark-mode .low-stock-card .card-icon {
+     color: #ffc107; /* Amarillo más claro en modo oscuro */
+}
+
+body.dark-mode .low-stock-card .card-value {
+     color: #ffecb3; /* Amarillo muy claro en modo oscuro */
+}
+
+body.dark-mode .card-link {
+    color: #81c784; /* Color de enlace claro en modo oscuro */
+}
+
+body.dark-mode .card-link:hover {
+    color: #a5d6a7; /* Color de enlace más claro al pasar el ratón */
+}
+
+/* --- Responsive para las Tarjetas --- */
+@media (max-width: 768px) {
+    .cards-container {
+        flex-direction: column; /* Apila las tarjetas en pantallas pequeñas */
+        gap: 15px; /* Reduce el espacio entre tarjetas */
+        align-items: center; /* Centra las tarjetas apiladas */
+    }
+
+    .card {
+        width: 90%; /* Las tarjetas ocupan la mayoría del ancho */
+        max-width: none; /* Quita el ancho máximo en móvil */
+        min-width: auto; /* Permite que se encojan más si es necesario */
+    }
+}
+
+
+.notification-popup {
+    position: fixed; /* Posición fija en la pantalla */
+    bottom: 60px; /* 20px desde el borde inferior */
+    left: 50%; /* Centrado horizontalmente */
+    transform: translateX(-50%); /* Ajuste para centrar exactamente */
+    background-color: #ffeb3b; /* Amarillo - Color de alerta */
+    color: #333; /* Color de texto oscuro */
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    /* Z-INDEX ALTO: Asegura que esté por encima de otros elementos.
+       Aumentado para resolver el problema de estar detrás de otros elementos. */
+    z-index: 100000;
+    opacity: 0; /* Inicialmente invisible */
+    visibility: hidden; /* Inicialmente oculto para lectores de pantalla */
+    transition: opacity 0.5s ease, visibility 0.5s ease; /* Transición suave */
+    display: flex; /* Para alinear icono y mensaje */
+    align-items: center;
+}
+
+.notification-popup.show {
+    opacity: 1; /* Hacer visible */
+    visibility: visible; /* Hacer visible */
+}
+
+.notification-icon {
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+.notification-message {
+    font-size: 16px;
+    max-width: 400px; /* Limitar el ancho del mensaje */
+}
+
+/* --- Adaptaciones para Modo Oscuro de la Notificación --- */
+body.dark-mode .notification-popup {
+    background-color: #fbc02d; /* Amarillo más oscuro en modo oscuro */
+    color: #212121; /* Texto oscuro */
+}
+
+
+/* --- Responsive para la Notificación (Opcional, si no lo tienes ya) --- */
+@media (max-width: 768px) {
+    .notification-popup {
+         bottom: 10px; /* Ajusta la posición inferior en móvil */
+         padding: 10px 15px; /* Reduce el padding en móvil */
+         max-width: 90%; /* Limita el ancho en móvil */
+         font-size: 14px;
+    }
+
+    .notification-icon {
+        font-size: 20px; /* Reduce el tamaño del icono en móvil */
+        margin-right: 10px;
+    }
+
+     .notification-message {
+         font-size: 14px; /* Reduce el tamaño del mensaje en móvil */
+     }
+}
+
+/* --- NUEVOS ESTILOS PARA LA CAMPANITA DE NOTIFICACIONES --- */
+
+.notification-area {
+    position: fixed;
+    top: 10px; /* Misma altura que el botón de gestión */
+    right: 220px; /* Mueve la campanita más a la izquierda. Ajusta este valor según necesites. */
+    z-index: 4000; /* Asegurar que esté por encima de otros contenidos */
+}
+
+.notification-bell {
+    font-size: 24px;
+    color: #4CAF50; /* Color de la campanita (verde por ejemplo) */
+    cursor: pointer;
+    position: relative;
+    padding: 10px;
+    border-radius: 50%;
+    background-color: #fff; /* Fondo blanco para la campanita */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-bell:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.05);
+}
+
+.notification-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #f44336; /* Rojo para el contador */
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 2px 6px;
+    min-width: 12px; /* Para que sea circular incluso con un solo dígito */
+    height: 12px;
+    display: flex; /* Para centrar el número */
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 2px #fff; /* Borde blanco alrededor del contador */
+}
+
+.notification-dropdown {
+    position: absolute;
+    top: 55px; /* Debajo de la campanita */
+    right: 0;
+    width: 300px; /* Ancho del menú desplegable */
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: none; /* Oculto por defecto */
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, display 0.3s;
+    z-index: 999; /* Ligeramente por debajo de la campanita, pero por encima de la mayoría */
+    max-height: 300px; /* Altura máxima para el scroll */
+    overflow-y: auto; /* Scroll si hay muchas notificaciones */
+}
+
+.notification-dropdown.show-dropdown {
+    display: block; /* Mostrar cuando se activa */
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.notification-dropdown h4 {
+    margin: 0;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+}
+
+.notification-dropdown ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.notification-item {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.4;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item a {
+    text-decoration: none;
+    color: inherit; /* Hereda el color del texto */
+    display: block; /* Para que todo el área del li sea clicable */
+}
+
+.notification-item a:hover {
+    color: #007bff; /* Cambia de color al pasar el ratón */
+}
+
+/* Estilos específicos para tipos de notificación */
+.notification-item.warning {
+    background-color: #fffbe6; /* Amarillo claro */
+    border-left: 4px solid #ffc107; /* Borde amarillo */
+}
+
+.notification-item.danger {
+    background-color: #ffe6e6; /* Rojo claro */
+    border-left: 4px solid #dc3545; /* Borde rojo */
+}
+
+.notification-item.info {
+    background-color: #e6f7ff; /* Azul claro */
+    border-left: 4px solid #007bff; /* Borde azul */
+}
+
+/* Modo oscuro para la campanita y el dropdown */
+body.dark-mode .notification-bell {
+    background-color: #36454F; /* Gris oscuro */
+    color: #f0f0f0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+body.dark-mode .notification-bell:hover {
+    background-color: #455a64;
+}
+
+body.dark-mode .notification-count {
+    box-shadow: 0 0 0 2px #222831; /* Borde blanco para el contador en modo oscuro */
+}
+
+body.dark-mode .notification-dropdown {
+    background-color: #36454F; /* Fondo oscuro */
+    border-color: #555;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+body.dark-mode .notification-dropdown h4 {
+    color: #f0f0f0;
+    border-bottom-color: #555;
+}
+
+body.dark-mode .notification-item {
+    color: #ccc;
+    border-bottom-color: #555;
+}
+
+body.dark-mode .notification-item a {
+    color: inherit;
+}
+
+body.dark-mode .notification-item a:hover {
+    color: #88c0d0; /* Un azul claro más suave para el modo oscuro */
+}
+
+body.dark-mode .notification-item.warning {
+    background-color: #4a422a;
+    border-left-color: #fbc02d;
+}
+
+body.dark-mode .notification-item.danger {
+    background-color: #523737;
+    border-left-color: #ef5350;
+}
+
+body.dark-mode .notification-item.info {
+    background-color: #374252;
+    border-left-color: #64b5f6;
+}
+
+/* Asegúrate de que los estilos anteriores de .notification-popup sean eliminados o comentados si ya no se usarán */
+/* .notification-popup, .notification-popup.show, etc. */
+

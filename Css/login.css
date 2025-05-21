@@ -1,0 +1,80 @@
+
+body {
+    font-family: 'Poppins', sans-serif;
+   
+    background: linear-gradient(135deg, #357018, #09ac2c);
+    background-color: white;
+    color: rgb(255, 255, 255);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.login-container {
+    background-color: white;
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    width: 350px;
+}
+
+h2 {
+    color: rgb(0, 0, 0);
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+    font-size: 14px;
+    color: black;
+}
+
+input {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1.5px solid #ccc;
+    border-radius: 5px;
+    background: #ffffff;
+    color: rgb(0, 0, 0);
+    outline: none;
+    border-color: black;
+    font-family:Verdana, Geneva, Tahoma, sans-serif
+}
+
+input::placeholder {
+    color: rgba(85, 73, 73, 0.6);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background: rgb(6, 163, 53);
+    color: rgb(255, 255, 255);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #00cc66;
+    box-shadow: 0 0 10px #00ff80;
+}
+
+.Gestión {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+

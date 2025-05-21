@@ -1,0 +1,76 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+.settings-container {
+    width: 90%;
+    max-width: 600px;
+    background: rgb(255, 255, 255);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+h1 {
+    color: #333;
+}
+.settings button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    background-color: #0aa73e;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+.settings button:hover {
+    background-color: #00b35a;
+}
+
+
+.dark-mode {
+    background-color: #222831;
+    color: #ffffff;
+}
+
+
+.dark-mode .settings button {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #555;
+}
+
+
+.animacion-boton {
+    transform: scale(1.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.add-btn{
+    display: block;
+    width: 20%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    background-color: #0aa73e;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.add-btn:hover {
+    background-color: #03914a;
+    transform: scale(1.05);
+
+}

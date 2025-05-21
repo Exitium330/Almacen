@@ -1,0 +1,61 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+.container {
+    width: 40%;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    margin-top: 90px;
+}
+input, button {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+button {
+    background-color: #2e7d32;
+    color: white;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #1b5e20;
+}
+.dark-mode {
+background-color: #222831;
+color: white;
+}
+
+.dark-mode table {
+background-color: #222831;
+color: white;
+border-color: white;
+}
+
+.dark-mode button {
+background-color: #333;
+color: white;
+border: 1px solid white;
+}
+
+.dark-mode tr:nth-child(even) {
+background-color: #2a2f3a; 
+}
+
+.dark-mode th {
+background-color: #0e915a; 
+}
+
+.dark-mode td {
+color: white;
+}
+
+.dark-mode h2 {
+color: rgb(27, 3, 3);
+}

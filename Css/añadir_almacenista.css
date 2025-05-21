@@ -1,0 +1,124 @@
+/* Reset de estilos para evitar márgenes y padding no deseados */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Centrar contenido */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+/* Contenedor del formulario */
+form {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    text-align: center;
+}
+
+/* Estilos para las etiquetas */
+label {
+    display: block;
+    text-align: left;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Estilos de los inputs */
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Botón de envío */
+button {
+    width: 100%;
+    background: #2e7d32;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #1b5e20;
+}
+
+/* Mensajes de alerta */
+.mensaje {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+.warning { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+
+/* Estilo del enlace */
+a {
+    display: block;
+    margin-top: 15px;
+    text-align: center;
+    text-decoration: none;
+    color: #2e7d32;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #1b5e20;
+}
+
+
+.dark-mode {
+    background-color: #222831;
+    color: white;
+    }
+    
+    .dark-mode table {
+    background-color: #222831;
+    color: white;
+    border-color: white;
+    }
+    
+    .dark-mode button {
+    background-color: #333;
+    color: white;
+    border: 1px solid white;
+    }
+    
+    .dark-mode tr:nth-child(even) {
+    background-color: #2a2f3a; 
+    }
+    
+    .dark-mode th {
+    background-color: #0e915a; 
+    }
+    
+    .dark-mode td {
+    color: white;
+    }
+    
+    .dark-mode h2 {
+    color: white;
+    }
+
