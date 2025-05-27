@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { /*Verifica si el método de la solic
         }
     }
     
-    echo "❌ Usuario o contraseña incorrectos.";
+    echo "<script>  alert('❌ Usuario o contraseña incorrectos.'); window.location.href='login.php'</script>"; 
 
     $stmt->close();
     $conn->close();

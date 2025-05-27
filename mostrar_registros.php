@@ -1,5 +1,6 @@
 <?php
-session_start();
+include('requiere_login.php');
+
 
 if (!isset($_SESSION['id_usuario'])) {
     header("Location: login.php");
@@ -205,7 +206,7 @@ echo "<h2>📋 Lista de Instructores</h2>";
 
 echo "<div class='search-container'>";
 echo "<input type='text' id='searchInput' class='validate-required' placeholder='Buscar por nombre...'>";
-echo "<a href='index.php' class='back-btn'>⬅️ Volver al Menú</a>";
+echo "<a href='index.php' class='back-btn'>Volver al inicio</a>";
 echo "</div>";
 
 if ($resultado->num_rows > 0) {

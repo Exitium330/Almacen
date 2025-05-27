@@ -2,6 +2,7 @@
 require_once "auth.php"; 
 require_once "conexion.php";
 
+
 if (!isset($conn)) {
     die("❌ Error: No se pudo establecer conexión con la base de datos.");
 }
@@ -11,31 +12,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = trim($_POST["nombre"]);
     $apellido = trim($_POST["apellido"]);
     $correo = trim($_POST["correo"]);
-    $telefono = empty(trim($_POST["telefono"])) ? NULL : trim($_POST["telefono"]);
+    $telefono = empty(trim($_POST["telefono"])) ? NULL : trim($_POST["telefono"]); // Teléfono sigue siendo opcional
     $cedula = trim($_POST["cedula"]);
 
-    // Validaciones para evitar campos vacíos o solo espacios
-    if (empty($nombre) || preg_match("/^\s+$/", $nombre)) {
-        echo "<script>alert('Error: El nombre no puede estar vacío o contener solo espacios'); window.history.back();</script>";
+    // --- Validaciones Mejoradas ---
+
+    // Función auxiliar para validar que el string no esté vacío y contenga letras, números y espacios (pero no solo espacios o símbolos)
+    function isValidNameText($str) {
+        // Verifica que no esté vacío después de trim
+        if (empty($str)) {
+            return false;
+        }
+        // Verifica que contenga al menos una letra o número (para evitar solo espacios o símbolos)
+        if (!preg_match('/[a-zA-Z0-9]/', $str)) {
+            return false;
+        }
+        // Verifica que solo contenga letras, números y espacios
+        return preg_match('/^[a-zA-Z0-9\s]+$/', $str);
+    }
+
+    if (!isValidNameText($nombre)) {
+        echo "<script>alert('Error: El nombre no puede estar vacío y solo debe contener letras, números y espacios (sin puntos u otros símbolos).'); window.history.back();</script>";
         exit();
     }
-    if (empty($apellido) || preg_match("/^\s+$/", $apellido)) {
-        echo "<script>alert('Error: El apellido no puede estar vacío o contener solo espacios'); window.history.back();</script>";
+    
+    if (!isValidNameText($apellido)) {
+        echo "<script>alert('Error: El apellido no puede estar vacío y solo debe contener letras, números y espacios (sin puntos u otros símbolos).'); window.history.back();</script>";
         exit();
     }
-    if (empty($correo) || preg_match("/^\s+$/", $correo) || !filter_var($correo, FILTER_VALIDATE_EMAIL)) {
-        echo "<script>alert('Error: El correo no puede estar vacío, contener solo espacios o ser inválido'); window.history.back();</script>";
+    
+    if (empty($correo) || !filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+        echo "<script>alert('Error: El correo no puede estar vacío, contener solo espacios o ser inválido.'); window.history.back();</script>";
         exit();
     }
-    // Teléfono es opcional, pero si se proporciona, no debe ser solo espacios
-    if ($telefono !== NULL && preg_match("/^\s+$/", $telefono)) {
-        echo "<script>alert('Error: El teléfono no puede contener solo espacios'); window.history.back();</script>";
+    
+    // Teléfono es opcional, pero si se proporciona, debe ser solo números
+    if ($telefono !== NULL && !preg_match("/^[0-9]+$/", $telefono)) {
+        echo "<script>alert('Error: El teléfono solo puede contener números.'); window.history.back();</script>";
         exit();
     }
-    if (empty($cedula) || preg_match("/^\s+$/", $cedula)) {
-        echo "<script>alert('Error: La cédula no puede estar vacía o contener solo espacios'); window.history.back();</script>";
+
+    // Validación para CÉDULA: solo números, entre 6 y 10 dígitos
+    if (empty($cedula) || !preg_match("/^[0-9]{6,10}$/", $cedula)) {
+        echo "<script>alert('Error: La cédula debe contener entre 6 y 10 números, sin espacios ni otros caracteres.'); window.history.back();</script>";
         exit();
     }
+
+    // --- Fin de Validaciones ---
 
     // Preparar la consulta
     $sql = "INSERT INTO instructores (nombre, apellido, correo, telefono, cedula) VALUES (?, ?, ?, ?, ?)";

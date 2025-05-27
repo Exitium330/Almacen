@@ -253,7 +253,7 @@ body.dark-mode button:hover {
     padding: 6px;
     margin-bottom: 20px;
     text-align: center;
-    font-size: 16px;
+    font-size: 12px;
     font-family: 'Poppins', sans-serif;
 }
 
@@ -265,7 +265,7 @@ body.dark-mode .user-info {
 .user-info span#username {
     color: #66ff00; /* Verde brillante */
     font-weight: bold;
-    font-size: 16px;
+    font-size: 12px;
 }
 
 

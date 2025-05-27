@@ -1,11 +1,6 @@
 <?php
-session_start();
 
-// Verificar si el usuario está autenticado
-if (!isset($_SESSION['id_usuario'])) {
-    header("Location: login.php");
-    exit();
-}
+include('requiere_login.php');
 
 include("conexion.php");
 
@@ -49,7 +44,7 @@ $result_count_equipment = $conn->query($sql_count_equipment);
 $total_equipment_count = $result_count_equipment->fetch_assoc()['total_equipment'] ?? 0;
 
 
-// --- CÓDIGO PARA NOTIFICACIONES ---
+
 $notifications = []; // Array para almacenar todas las notificaciones
 
 // 1. Notificación de Stock Bajo (Materiales)

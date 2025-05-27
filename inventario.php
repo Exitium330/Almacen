@@ -1,10 +1,13 @@
 <?php
+
+include('requiere_login.php'); // ¡Esta es la clave!
+// ... el resto de tu código
+
 // Habilitar la salida de errores temporalmente para depuración
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-session_start();
 
 // Conexión a la base de datos
 $conn = new mysqli("localhost", "root", "1027802491", "proyecto_almacen");
@@ -36,41 +39,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['actualizar_equipo']))
     $response = ['success' => false, 'message' => ''];
 
     $id_equipo = (int)$_POST['id_equipo'];
-    $marca = trim($_POST['marca']);
-    if ($marca === 'Otra') {
-        $marca = trim($_POST['custom_marca']);
-    }
-    $serial = trim($_POST['serial']);
-    $estado = $_POST['estado'];
+    $marca = trim($_POST['marca'] ?? '');
+    $custom_marca = trim($_POST['custom_marca'] ?? '');
+    $serial = trim($_POST['serial'] ?? '');
+    $estado = $_POST['estado'] ?? '';
 
-    // Validar que el serial no exista en otro equipo
-    $sql = "SELECT id_equipo FROM equipos WHERE serial = ? AND id_equipo != ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("si", $serial, $id_equipo);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($result->num_rows > 0) {
-        $response['message'] = "Error: Ya existe otro equipo con el serial '$serial'.";
+    // --- Validaciones para actualizar equipo ---
+    if (empty($marca)) {
+        $response['message'] = "Error: La marca del equipo es obligatoria.";
+    } elseif ($marca === 'Otra' && empty($custom_marca)) {
+        $response['message'] = "Error: Debe especificar la marca si selecciona 'Otra'.";
+    } elseif (empty($serial)) {
+        $response['message'] = "Error: El serial del equipo es obligatorio.";
+    } elseif (empty($estado)) {
+        $response['message'] = "Error: El estado del equipo es obligatorio.";
+    } elseif (!in_array($estado, ['disponible', 'prestado', 'deteriorado'])) {
+        $response['message'] = "Error: Estado de equipo inválido.";
     } else {
-        $sql = "UPDATE equipos SET marca = ?, serial = ?, estado = ? WHERE id_equipo = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssi", $marca, $serial, $estado, $id_equipo);
-        if ($stmt->execute()) {
-            // Registrar en historial_cambios
-            $detalles = json_encode([
-                'marca' => $marca,
-                'serial' => $serial,
-                'estado' => $estado
-            ]);
-            $sql_historial = "INSERT INTO historial_cambios (id_usuario, tabla_afectada, accion, id_registro, detalles) VALUES (?, 'equipos', 'actualizar', ?, ?)";
-            $stmt_historial = $conn->prepare($sql_historial);
-            $stmt_historial->bind_param("iis", $id_usuario, $id_equipo, $detalles);
-            $stmt_historial->execute();
+        $final_marca = ($marca === 'Otra') ? $custom_marca : $marca;
 
-            $response['success'] = true;
-            $response['message'] = "Confirmación exitosa";
+        // Validar que el serial no exista en otro equipo
+        $sql = "SELECT id_equipo FROM equipos WHERE serial = ? AND id_equipo != ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("si", $serial, $id_equipo);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $response['message'] = "Error: Ya existe otro equipo con el serial '$serial'.";
         } else {
-            $response['message'] = "Error al actualizar equipo: " . $stmt->error;
+            $sql = "UPDATE equipos SET marca = ?, serial = ?, estado = ? WHERE id_equipo = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sssi", $final_marca, $serial, $estado, $id_equipo);
+            if ($stmt->execute()) {
+                // Registrar en historial_cambios
+                $detalles = json_encode([
+                    'marca' => $final_marca,
+                    'serial' => $serial,
+                    'estado' => $estado
+                ]);
+                $sql_historial = "INSERT INTO historial_cambios (id_usuario, tabla_afectada, accion, id_registro, detalles) VALUES (?, 'equipos', 'actualizar', ?, ?)";
+                $stmt_historial = $conn->prepare($sql_historial);
+                $stmt_historial->bind_param("iis", $id_usuario, $id_equipo, $detalles);
+                $stmt_historial->execute();
+
+                $response['success'] = true;
+                $response['message'] = "Confirmación exitosa";
+            } else {
+                $response['message'] = "Error al actualizar equipo: " . $stmt->error;
+            }
         }
     }
 
@@ -109,42 +125,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_equipo'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregar_equipo_ajax'])) {
     $response = ['success' => false, 'message' => '', 'id_equipo' => null];
 
-    $marca = trim($_POST['marca']);
-    if ($marca === 'Otra') {
-        $marca = trim($_POST['custom_marca']);
-    }
-    $serial = trim($_POST['serial']);
-    $estado = 'disponible';
+    $marca = trim($_POST['marca'] ?? '');
+    $custom_marca = trim($_POST['custom_marca'] ?? '');
+    $serial = trim($_POST['serial'] ?? '');
+    $estado = 'disponible'; // Siempre se agrega como disponible
 
-    $sql = "SELECT id_equipo FROM equipos WHERE serial = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $serial);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($result->num_rows > 0) {
-        $response['message'] = "Error: Ya existe un equipo con el serial '$serial'.";
+    // --- Validaciones para agregar equipo ---
+    if (empty($marca)) {
+        $response['message'] = "Error: La marca del equipo es obligatoria.";
+    } elseif ($marca === 'Otra' && empty($custom_marca)) {
+        $response['message'] = "Error: Debe especificar la marca si selecciona 'Otra'.";
+    } elseif (empty($serial)) {
+        $response['message'] = "Error: El serial del equipo es obligatorio.";
     } else {
-        $sql = "INSERT INTO equipos (marca, serial, estado, fecha_creacion) VALUES (?, ?, ?, NOW())";
+        $final_marca = ($marca === 'Otra') ? $custom_marca : $marca;
+
+        $sql = "SELECT id_equipo FROM equipos WHERE serial = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sss", $marca, $serial, $estado);
-        if ($stmt->execute()) {
-            $id_equipo = $conn->insert_id;
-
-            $detalles = json_encode([
-                'marca' => $marca,
-                'serial' => $serial,
-                'estado' => $estado
-            ]);
-            $sql_historial = "INSERT INTO historial_cambios (id_usuario, tabla_afectada, accion, id_registro, detalles) VALUES (?, 'equipos', 'agregar', ?, ?)";
-            $stmt_historial = $conn->prepare($sql_historial);
-            $stmt_historial->bind_param("iis", $id_usuario, $id_equipo, $detalles);
-            $stmt_historial->execute();
-
-            $response['success'] = true;
-            $response['message'] = "Confirmación exitosa";
-            $response['id_equipo'] = $id_equipo;
+        $stmt->bind_param("s", $serial);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $response['message'] = "Error: Ya existe un equipo con el serial '$serial'.";
         } else {
-            $response['message'] = "Error al agregar equipo: " . $stmt->error;
+            $sql = "INSERT INTO equipos (marca, serial, estado, fecha_creacion) VALUES (?, ?, ?, NOW())";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sss", $final_marca, $serial, $estado);
+            if ($stmt->execute()) {
+                $id_equipo = $conn->insert_id;
+
+                $detalles = json_encode([
+                    'marca' => $final_marca,
+                    'serial' => $serial,
+                    'estado' => $estado
+                ]);
+                $sql_historial = "INSERT INTO historial_cambios (id_usuario, tabla_afectada, accion, id_registro, detalles) VALUES (?, 'equipos', 'agregar', ?, ?)";
+                $stmt_historial = $conn->prepare($sql_historial);
+                $stmt_historial->bind_param("iis", $id_usuario, $id_equipo, $detalles);
+                $stmt_historial->execute();
+
+                $response['success'] = true;
+                $response['message'] = "Confirmación exitosa";
+                $response['id_equipo'] = $id_equipo;
+            } else {
+                $response['message'] = "Error al agregar equipo: " . $stmt->error;
+            }
         }
     }
 
@@ -160,16 +185,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregar_material_ajax
     try {
         $nombre = trim($_POST['nombre_material'] ?? '');
         $tipo = $_POST['tipo'] ?? '';
-        $stock = isset($_POST['stock']) ? (int)$_POST['stock'] : 0;
+        $stock = isset($_POST['stock']) ? (int)$_POST['stock'] : -1; // Usar -1 para distinguir de 0 si el campo no se envía
 
+        // --- Validaciones para agregar material ---
         if (empty($nombre)) {
             throw new Exception("Error: El nombre del material es obligatorio.");
+        }
+        if (empty($tipo)) {
+            throw new Exception("Error: El tipo de material es obligatorio.");
         }
         if (!in_array($tipo, ['consumible', 'no consumible'])) {
             throw new Exception("Error: Tipo de material inválido.");
         }
-        if ($stock < 1) {
-            throw new Exception("Error: El stock debe ser mayor o igual a 1.");
+        if ($stock < 1) { // Stock debe ser al menos 1 al agregar
+            throw new Exception("Error: El stock debe ser un número entero mayor o igual a 1.");
         }
 
         $sql = "INSERT INTO materiales (nombre, tipo, stock, fecha_creacion) VALUES (?, ?, ?, NOW())";
@@ -214,14 +243,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['actualizar_material_a
     $response = ['success' => false, 'message' => ''];
 
     $id_material = (int)$_POST['id_material'];
-    $nombre = trim($_POST['nombre']);
-    $tipo = $_POST['tipo'];
-    $stock = (int)$_POST['stock'];
+    $nombre = trim($_POST['nombre'] ?? '');
+    $tipo = $_POST['tipo'] ?? '';
+    $stock = isset($_POST['stock']) ? (int)$_POST['stock'] : -1;
 
-    if ($stock < 0) {
-        $response['message'] = "Error: El stock no puede ser negativo.";
-    } else if (!in_array($tipo, ['consumible', 'no consumible'])) {
+    // --- Validaciones para actualizar material ---
+    if (empty($nombre)) {
+        $response['message'] = "Error: El nombre del material es obligatorio.";
+    } elseif (empty($tipo)) {
+        $response['message'] = "Error: El tipo de material es obligatorio.";
+    } elseif (!in_array($tipo, ['consumible', 'no consumible'])) {
         $response['message'] = "Error: Tipo de material inválido.";
+    } elseif ($stock < 0) { // Stock puede ser 0 al actualizar
+        $response['message'] = "Error: El stock no puede ser un número negativo.";
     } else {
         $sql = "UPDATE materiales SET nombre = ?, tipo = ?, stock = ? WHERE id_material = ?";
         $stmt = $conn->prepare($sql);
@@ -713,16 +747,13 @@ if (isset($_GET['exportar_materiales_csv'])) {
         <h2>Gestión de Inventario</h2>
         <button class="back-btn" onclick="window.location.href='index.php'">Volver al Inicio</button>
 
-        <!-- Pestañas -->
         <div class="tabs">
             <div class="tab active" onclick="showTab('equipos')">Equipos</div>
             <div class="tab" onclick="showTab('materiales')">Materiales</div>
             <div class="tab" onclick="showTab('historial')">Historial de Cambios</div>
         </div>
 
-        <!-- Contenido de la pestaña Equipos -->
         <div id="equipos" class="tab-content active">
-            <!-- Formulario para agregar equipo -->
             <div class="form-group">
                 <h3>Agregar Equipo</h3>
                 <form id="addEquipoForm">
@@ -737,7 +768,7 @@ if (isset($_GET['exportar_materiales_csv'])) {
                         <option value="Apple">Apple</option>
                         <option value="Otra">Otra</option>
                     </select>
-                    <input type="text" name="custom_marca" id="customMarca" placeholder="Ingrese la marca">
+                    <input type="text" name="custom_marca" id="customMarca" placeholder="Ingrese la marca" style="display:none;">
 
                     <label for="serial">Serial:</label>
                     <input type="text" name="serial" id="serial" required>
@@ -746,16 +777,12 @@ if (isset($_GET['exportar_materiales_csv'])) {
                 </form>
             </div>
 
-            <!-- Botón para cargar u ocultar los equipos -->
             <button class="green-btn" id="toggleEquiposBtn" onclick="toggleEquipos()">Mostrar Equipos en Inventario</button>
 
-            <!-- Contenedor donde se cargarán los equipos -->
             <div id="equiposTableContainer"></div>
         </div>
 
-        <!-- Contenido de la pestaña Materiales -->
         <div id="materiales" class="tab-content">
-            <!-- Formulario para agregar material -->
             <div class="form-group">
                 <h3>Agregar Material</h3>
                 <form id="addMaterialForm">
@@ -775,23 +802,17 @@ if (isset($_GET['exportar_materiales_csv'])) {
                 </form>
             </div>
 
-            <!-- Botón para cargar u ocultar los materiales -->
             <button class="green-btn" id="toggleMaterialesBtn" onclick="toggleMateriales()">Mostrar Materiales en Inventario</button>
 
-            <!-- Contenedor donde se cargarán los materiales -->
             <div id="materialesTableContainer"></div>
         </div>
 
-        <!-- Contenido de la pestaña Historial -->
         <div id="historial" class="tab-content">
             <h3>Historial de Cambios</h3>
-            <!-- Botón para cargar u ocultar el historial -->
             <button class="green-btn" id="toggleHistorialBtn" onclick="loadHistorial()">Mostrar Historial de Cambios</button>
-            <!-- Contenedor donde se cargará el historial -->
             <div id="historialTableContainer"></div>
         </div>
 
-        <!-- Modal para actualizar equipo -->
         <div id="updateEquipoModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal('updateEquipoModal')">×</span>
@@ -810,7 +831,7 @@ if (isset($_GET['exportar_materiales_csv'])) {
                         <option value="Apple">Apple</option>
                         <option value="Otra">Otra</option>
                     </select>
-                    <input type="text" name="custom_marca" id="update_customMarca" placeholder="Ingrese la marca">
+                    <input type="text" name="custom_marca" id="update_customMarca" placeholder="Ingrese la marca" style="display:none;">
 
                     <label for="update_serial">Serial:</label>
                     <input type="text" name="serial" id="update_serial" required>
@@ -827,7 +848,6 @@ if (isset($_GET['exportar_materiales_csv'])) {
             </div>
         </div>
 
-        <!-- Modal para actualizar material -->
         <div id="updateMaterialModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal('updateMaterialModal')">×</span>

@@ -1,5 +1,6 @@
 <?php
-session_start();
+include('requiere_login.php');
+
 
 // === Seguridad: Verificar autenticación y rol de administrador ===
 // Es crucial que esta verificación esté al principio de CADA script de administración
@@ -88,7 +89,7 @@ if ($resultado_todos) { // Verifica que la consulta fue exitosa
     <title>Panel de Administración - Almacenistas</title>
     <link rel="stylesheet" href="Css/style.css?v=<?php echo time(); ?>">
     <style>
-        /* Estilos básicos temporales o para complementar tu style.css */
+        
         body {
              font-family: sans-serif;
              line-height: 1.6;
@@ -196,14 +197,23 @@ if ($resultado_todos) { // Verifica que la consulta fue exitosa
             background-color:rgb(11, 105, 58);
          }
          .back-link {
-             display: block;
-             margin-top: 20px;
-             text-align: center;
-             text-decoration: none;
-             color: #007bff;
+              display: inline-block; /* Convierte el enlace en un bloque inline para que acepte padding y un fondo */
+            padding: 8px 10px; /* Espaciado interno para hacerlo más grande y visible */
+            background-color: #007bff; /* Color de fondo azul */
+            color: #ffffff; /* Color del texto blanco */
+            border: none; /* Elimina cualquier borde predeterminado */
+            border-radius: 8px; /* Bordes redondeados para darle forma de botón */
+            text-decoration: none; /* Elimina el subrayado del enlace */
+            font-size: 17px; /* Tamaño de la fuente un poco más grande */
+            font-weight: 600; /* Hace el texto un poco más audaz */
+            cursor: pointer; /* Cambia el cursor a una mano para indicar que es clickeable */
+
+    /* Transición suave para los efectos al pasar el cursor */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
          }
          .back-link:hover {
-             text-decoration: underline;
+             background-color:rgb(56, 90, 126);
+             
          }
     </style>
 </head>

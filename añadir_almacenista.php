@@ -1,5 +1,7 @@
 <?php
-session_start();
+include('requiere_login.php');
+
+
 if (!isset($_SESSION['id_usuario']) || $_SESSION['es_admin'] != 1) {
     header("Location: login.php"); 
     exit();

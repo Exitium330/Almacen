@@ -1,5 +1,6 @@
 <?php
-session_start();
+include('requiere_login.php');
+
 
 // === Seguridad: Verificar autenticación y rol de administrador ===
 if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['es_admin']) || $_SESSION['es_admin'] != 1) {

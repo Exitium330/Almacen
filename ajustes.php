@@ -1,5 +1,6 @@
 <?php
-session_start();
+include('requiere_login.php');
+
 
 if (!isset($_SESSION['id_usuario'])) {
     header("Location: login.php");

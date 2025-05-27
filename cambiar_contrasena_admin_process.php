@@ -1,5 +1,6 @@
 <?php
-session_start();
+include('requiere_login.php');
+
 
 // === Seguridad: Verificar autenticación y rol de administrador ===
 // Crucial para proteger este script
