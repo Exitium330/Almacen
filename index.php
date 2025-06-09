@@ -44,10 +44,43 @@ $result_count_equipment = $conn->query($sql_count_equipment);
 $total_equipment_count = $result_count_equipment->fetch_assoc()['total_equipment'] ?? 0;
 
 
+// --- CÓDIGO PARA OBTENER DATOS DE PRÉSTAMOS PARA TARJETAS ---
 
-$notifications = []; // Array para almacenar todas las notificaciones
+// Modificado para contar grupos de equipos como un solo préstamo activo
+$sql_prestamos_activos = "
+    SELECT 
+        (SELECT COUNT(DISTINCT id_instructor, fecha_prestamo) FROM prestamo_equipos WHERE estado = 'pendiente') +
+        (SELECT COUNT(*) FROM prestamo_materiales pm JOIN materiales m ON pm.id_material = m.id_material WHERE pm.estado = 'pendiente' AND m.tipo = 'no consumible') 
+        AS total_prestamos_activos
+";
+$resultado_prestamos_activos = $conn->query($sql_prestamos_activos);
+$total_prestamos_activos = $resultado_prestamos_activos->fetch_assoc()['total_prestamos_activos'] ?? 0;
 
-// 1. Notificación de Stock Bajo (Materiales)
+// Modificado para contar grupos de equipos con al menos un item retrasado como un solo préstamo retrasado
+$sql_prestamos_retrasados = "
+    SELECT 
+        (SELECT COUNT(*) FROM (
+            SELECT DISTINCT id_instructor, fecha_prestamo
+            FROM prestamo_equipos
+            WHERE estado = 'pendiente'
+              AND fecha_devolucion_esperada IS NOT NULL
+              AND fecha_devolucion_esperada < CURRENT_TIMESTAMP
+        ) AS overdue_equipment_groups) +
+        (SELECT COUNT(*) FROM prestamo_materiales pm JOIN materiales m ON pm.id_material = m.id_material 
+         WHERE pm.estado = 'pendiente' AND m.tipo = 'no consumible' 
+           AND pm.fecha_devolucion_esperada IS NOT NULL
+           AND pm.fecha_devolucion_esperada < CURRENT_TIMESTAMP)
+        AS total_prestamos_retrasados
+";
+$resultado_prestamos_retrasados = $conn->query($sql_prestamos_retrasados);
+$total_prestamos_retrasados = $resultado_prestamos_retrasados->fetch_assoc()['total_prestamos_retrasados'] ?? 0;
+
+// --- FIN CÓDIGO PARA OBTENER DATOS DE PRÉSTAMOS ---
+
+
+// --- CÓDIGO DE NOTIFICACIONES ---
+$notifications = []; 
+
 $umbral_stock_bajo_material = 10;
 $sql_stock_bajo_count = "SELECT COUNT(*) AS stock_bajo_count FROM materiales WHERE stock <= ?";
 $stmt_stock_bajo_count = $conn->prepare($sql_stock_bajo_count);
@@ -77,9 +110,15 @@ if ($stock_bajo_count > 0) {
     ];
 }
 
-// Se elimina la sección de Notificaciones de Préstamos Vencidos por solicitud.
+// Nueva notificación para préstamos retrasados (utiliza el $total_prestamos_retrasados ya corregido)
+if ($total_prestamos_retrasados > 0) {
+    $notifications[] = [
+        'type' => 'danger', 
+        'message' => "🚨 **Hay {$total_prestamos_retrasados} préstamo(s) de grupo/material retrasado(s).** ¡Revisar urgentemente!",
+        'link' => 'prestamos.php#activos' 
+    ];
+}
 
-// Convertir el array de notificaciones a JSON para JavaScript
 $notifications_json = json_encode($notifications);
 
 // --- FIN CÓDIGO DE NOTIFICACIONES ---
@@ -97,29 +136,24 @@ $notifications_json = json_encode($notifications);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Modo oscuro
             if (localStorage.getItem("modoOscuro") === "enabled") {
                 document.body.classList.add("dark-mode");
             } else {
                 document.body.classList.remove("dark-mode");
             }
 
-            // --- LÓGICA DE NOTIFICACIONES ---
             const notificationBell = document.getElementById('notification-bell');
             const notificationCount = document.getElementById('notification-count');
             const notificationDropdown = document.getElementById('notification-dropdown');
             const notificationList = document.getElementById('notification-list');
+            const notificationsData = JSON.parse('<?php echo $notifications_json; ?>');
 
-            const notifications = JSON.parse('<?php echo $notifications_json; ?>');
-
-            // Cargar notificaciones en el dropdown
-            if (notifications.length > 0) {
-                notificationCount.textContent = notifications.length;
-                notificationCount.style.display = 'flex'; // Mostrar el contador
-
-                notifications.forEach(notif => {
+            if (notificationsData.length > 0) {
+                notificationCount.textContent = notificationsData.length;
+                notificationCount.style.display = 'flex'; 
+                notificationsData.forEach(notif => {
                     const listItem = document.createElement('li');
-                    listItem.classList.add('notification-item', notif.type); // Añadir clase de tipo (warning, danger, info)
+                    listItem.classList.add('notification-item', notif.type); 
                     if (notif.link) {
                         listItem.innerHTML = `<a href="${notif.link}">${notif.message}</a>`;
                     } else {
@@ -128,27 +162,24 @@ $notifications_json = json_encode($notifications);
                     notificationList.appendChild(listItem);
                 });
             } else {
-                notificationCount.style.display = 'none'; // Ocultar el contador si no hay notificaciones
+                notificationCount.style.display = 'none'; 
                 const noNotifItem = document.createElement('li');
                 noNotifItem.classList.add('notification-item');
                 noNotifItem.textContent = 'No hay notificaciones pendientes.';
                 notificationList.appendChild(noNotifItem);
             }
 
-            // Mostrar/Ocultar el dropdown al hacer clic en la campanita
             notificationBell.addEventListener('click', function(event) {
-                event.stopPropagation(); // Evita que el clic se propague al document y cierre el dropdown
+                event.stopPropagation(); 
                 notificationDropdown.classList.toggle('show-dropdown');
             });
 
-            // Cerrar el dropdown si se hace clic fuera de él
             document.addEventListener('click', function(event) {
-                if (!notificationBell.contains(event.target) && !notificationDropdown.contains(event.target)) {
+                if (notificationDropdown && !notificationBell.contains(event.target) && !notificationDropdown.contains(event.target)) {
                     notificationDropdown.classList.remove('show-dropdown');
                 }
             });
 
-            // --- ELIMINAR EL POPUP DE NOTIFICACIÓN ANTIGUO ---
             const oldNotificationPopup = document.getElementById('stock-bajo-notification');
             if (oldNotificationPopup) {
                 oldNotificationPopup.remove();
@@ -172,9 +203,8 @@ $notifications_json = json_encode($notifications);
         <ul>
             <li><a href="prestamos.php">📚 Préstamos y devoluciones</a></li>
             <li><a href="inventario.php">📦 Inventario</a></li>
-            <li><a href="registro.html">👥 Registro de instructores</a></li>
-            <li><a href="">📝 Novedades</a></li>
-            <li><a href="mostrar_registros.php">🗒️ Listado de instructores</a></li>
+            <li><a href="mostrar_registros.php">🗒️ Gestión de instructores</a></li>
+            <li><a href="Novedades.php">📝 Novedades</a></li>
             <li><a class="ajuste" href="ajustes.php">⚙️ Ajustes</a></li>
         </ul>
         <a href="logout.php" class="logout-btn">🚪 Cerrar sesión</a>
@@ -189,10 +219,9 @@ $notifications_json = json_encode($notifications);
             <div id="notification-dropdown" class="notification-dropdown">
                 <h4>Notificaciones</h4>
                 <ul id="notification-list">
-                    </ul>
+                </ul>
             </div>
         </div>
-
 
         <h1>Bienvenido, <?php echo htmlspecialchars($_SESSION['nombre']); ?></h1>
         <p>Este software ayuda en la gestión de inventarios y préstamos.</p>
@@ -200,24 +229,48 @@ $notifications_json = json_encode($notifications);
         <div class="cards-container">
             <div class="card total-stock-card">
                 <div class="card-icon">
-                     <i class="fas fa-boxes"></i> </div>
+                     <i class="fas fa-boxes-stacked"></i>
+                </div>
                 <div class="card-info">
                     <div class="card-title">Total Ítems en Stock</div>
                     <div class="card-value"><?php echo $total_stock; ?></div>
                 </div>
-            </div>
+                </div>
 
             <div class="card low-stock-card">
                 <div class="card-icon">
-                    <i class="fas fa-exclamation-triangle"></i> </div>
+                    <i class="fas fa-exclamation-triangle"></i> 
+                </div>
                 <div class="card-info">
                     <div class="card-title">Materiales con Stock Bajo</div>
                     <div class="card-value"><?php echo $stock_bajo_count; ?></div>
                 </div>
                 <a href="inventario.php?filter=low_stock_material" class="card-link">Ver materiales</a>
             </div>
+            
+            <div class="card active-loans-card">
+                <div class="card-icon">
+                    <i class="fas fa-hourglass-half"></i>
+                </div>
+                <div class="card-info">
+                    <div class="card-title">Préstamos Activos</div>
+                    <div class="card-value"><?php echo $total_prestamos_activos; ?></div>
+                </div>
+                <a href="prestamos.php#activos" class="card-link">Ver préstamos</a>
+            </div>
 
-            <div class="card">
+            <div class="card overdue-loans-card">
+                <div class="card-icon">
+                    <i class="fas fa-calendar-times"></i>
+                </div>
+                <div class="card-info">
+                    <div class="card-title">Préstamos Retrasados</div>
+                    <div class="card-value"><?php echo $total_prestamos_retrasados; ?></div>
+                </div>
+                 <a href="prestamos.php#activos" class="card-link">Revisar ahora</a>
+            </div>
+
+            <div class="card total-equipment-card">
                 <div class="card-icon">
                     <i class="fas fa-tools"></i>
                 </div>
@@ -228,9 +281,9 @@ $notifications_json = json_encode($notifications);
                 <a href="inventario.php?type=equipment" class="card-link">Ver equipos</a>
             </div>
 
-            <div class="card">
+            <div class="card total-materials-card">
                 <div class="card-icon">
-                    <i class="fas fa-dolly-flatbed"></i>
+                    <i class="fas fa-dolly"></i>
                 </div>
                 <div class="card-info">
                     <div class="card-title">Total Materiales</div>
@@ -239,11 +292,11 @@ $notifications_json = json_encode($notifications);
                 <a href="inventario.php?type=material" class="card-link">Ver materiales</a>
             </div>
 
-            </div>
         </div>
+    </div>
 
     <footer class="pie">
-        © 2025 Almacén SENA. Todos los derechos reservados.
+        © <?php echo date("Y"); ?> Almacén SENA. Todos los derechos reservados.
     </footer>
 
 </body>

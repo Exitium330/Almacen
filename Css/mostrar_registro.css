@@ -1,468 +1,304 @@
-/* Estilos generales del cuerpo para consistencia */
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     line-height: 1.6;
     margin: 0;
     padding: 20px;
-    background-color: #f4f7f6;
-    color: #333;
+    background-color: #f8f9fa;
+    color: #212529;
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* Estilo para el título principal */
 h2 {
     text-align: center;
-    color: #2e7d32;
-    margin-bottom: 20px; /* Mantener o ajustar si quieres menos espacio debajo del título */
-    font-weight: 700;
+    color: #343a40;
+    margin-bottom: 20px;
+    font-weight: 600;
 }
 
-/* Contenedor de búsqueda y botón de volver */
+/* ================================================================== */
+/* Contenedor de Búsqueda y Acciones
+/* ================================================================== */
 .search-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px; /* Espacio debajo del contenedor de búsqueda */
-    padding: 10px 0;
+    margin-bottom: 30px;
     flex-wrap: wrap;
     gap: 15px;
-    /* *** AJUSTE PARA MOVERLO MÁS ARRIBA *** */
-    margin-top: -80px; /* Un margen superior negativo para subirlo visualmente */
-    position: relative; /* Podría ser necesario para el z-index si hay elementos por encima */
-    z-index: 1; /* Asegurarse de que esté por encima de otros elementos si se solapan */
 }
 
-/* Campo de búsqueda */
 #searchInput {
     padding: 10px 15px;
-    border: 1px solid #bdbdbd;
-    border-radius: 5px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
     font-size: 1rem;
-    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
     flex-grow: 1;
-    max-width: 300px;
+    max-width: 350px;
 }
 
 #searchInput:focus {
     outline: none;
-    border-color: #4caf50;
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
 }
 
-/* Botón de volver */
-.back-btn {
-    display: inline-block;
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.back-btn, .add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     padding: 10px 20px;
-    background-color: #757575;
-    color: white;
+    color: white !important;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 8px;
     font-weight: 500;
-    transition: background-color 0.3s ease-in-out;
+    transition: all 0.3s ease;
     border: none;
     cursor: pointer;
 }
 
-.back-btn:hover {
-    background-color: #5a5a5a;
+.back-btn {
+    background-color: #1ea53b;
 }
 
-/* --- Estilos para la tabla responsiva --- */
+.back-btn:hover {
+    background-color: #0d6929;
+    transform: translateY(-2px);
+}
 
-/* Contenedor para la tabla que limita el ancho y permite desplazamiento horizontal */
+.add-btn {
+    background-color: #4CAF50;
+}
+
+.add-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+
+/* ================================================================== */
+/* Estilo de la Tabla 
+/* ================================================================== */
 .table-container {
     width: 100%;
-    max-width: 1100px; /* *** ANCHO MÁXIMO AUMENTADO AQUÍ *** */
-    margin: 20px auto; /* Centrado horizontalmente y margen superior */
+    margin: 20px auto;
     overflow-x: auto;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
 }
 
-/* La tabla en sí */
 #instructorsTable {
     width: 100%;
     border-collapse: collapse;
     background-color: #ffffff;
-    /* min-width: 700px; */
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
 }
 
-/* Cabecera de la tabla */
 #instructorsTable th {
-    background-color: #4caf50;
-    color: white;
-    padding: 10px 12px;
+    color: #6c757d;
+    padding: 16px 20px;
     text-align: left;
-    font-weight: 700;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    white-space: nowrap;
+    border-bottom: 2px solid #e9ecef;
 }
 
-/* Celdas de la tabla */
+#instructorsTable tr {
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #e9ecef;
+}
+
+#instructorsTable tr:last-of-type {
+    border-bottom: none;
+}
+
+#instructorsTable tr:hover {
+    background-color: #f8f9fa;
+}
+
 #instructorsTable td {
-    padding: 10px 12px;
-    border-bottom: 1px solid #dddddd;
+    padding: 16px 20px;
     vertical-align: middle;
-    word-break: break-word;
+    color: #495057;
 }
 
-/* Filas impares */
-#instructorsTable tbody tr:nth-child(odd) {
-    background-color: #f9f9f9;
+#instructorsTable td:first-child {
+    font-weight: 500;
+    color: #212529;
 }
 
-/* Efecto hover en filas */
-#instructorsTable tbody tr:hover {
-    background-color: #f0f0f0;
-    transition: background-color 0.3s ease-in-out;
+.actions-header {
+    text-align: center !important;
 }
 
-/* Estilos para los botones de acción */
-#instructorsTable td button {
-    padding: 6px 10px;
+.actions-cell {
+    text-align: center;
+}
+
+.actions-cell button {
+    padding: 8px 12px;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 0.9rem;
-    transition: background-color 0.2s ease-in-out;
-    margin-right: 5px;
-}
-
-#instructorsTable td button:last-child {
-    margin-right: 0;
-}
-
-/* Botón Editar */
-#instructorsTable td a button {
-    background-color: #81c784;
-    color: #333;
-}
-
-#instructorsTable td a button:hover {
-     background-color: #66bb6a;
-}
-
-/* Botón Eliminar */
-#instructorsTable td form button[type="submit"] {
-    background-color: #e57373;
-    color: white;
-}
-
-#instructorsTable td form button[type="submit"]:hover {
-    background-color: #ef5350;
-}
-
-/* Mensaje de "No hay instructores" */
-.table-container p {
-     text-align: center;
-     margin-top: 20px;
-     font-size: 1.1rem;
-     color: #555;
-}
-
-
-/* --- Estilos para el Modal de Edición --- */
-
-/* Overlay: Posicionamiento fijo y cubre la pantalla */
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    z-index: 990;
-    overflow: auto;
-}
-
-/* Contenido del Modal: Posicionamiento Fijo y Centrado */
-.edit-popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-
-    background-color: #ffffff;
-    width: 90%;
-    max-width: 450px;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    font-family: 'Roboto', sans-serif;
-    border: none;
-
-    max-height: 95vh;
-    overflow-y: auto;
-    box-sizing: border-box;
-    margin: 20px;
-}
-
-.edit-popup h2 {
-    color: #388e3c;
-    font-size: 24px;
-    margin-top: 0;
-    margin-bottom: 25px;
-    text-align: center;
-}
-
-.edit-popup form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.edit-popup label {
-    color: #555;
-    font-size: 1rem;
     font-weight: 500;
-}
-
-.edit-popup input[type="text"],
-.edit-popup input[type="email"],
-.edit-popup select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1rem;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease-in-out;
-}
-
-.edit-popup input[type="text"]:focus,
-.edit-popup input[type="email"]:focus,
-.edit-popup select:focus {
-    border-color: #4caf50;
-    outline: none;
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
-}
-
-.edit-popup button[type="submit"] {
-    background-color: #4caf50;
-    color: #ffffff;
-    border: none;
-    padding: 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: background-color 0.3s ease-in-out;
-    margin-top: 10px;
-}
-
-.edit-popup button[type="submit"]:hover {
-    background-color: #388e3c;
-}
-
-.edit-popup a {
-    color: #757575;
-    text-decoration: none;
-    text-align: center;
-    display: block;
-    font-size: 1rem;
-    margin-top: 15px;
-    transition: color 0.3s ease-in-out;
-}
-
-.edit-popup a:hover {
-    color: #2e7d32;
-}
-
-
-/* --- Estilos para Notificaciones --- */
-.notification {
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-weight: bold;
-    transition: opacity 0.5s ease-in-out;
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    max-width: 350px;
-    text-align: center;
-    z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    opacity: 1;
-}
-.notification.success {
-    background-color: #4CAF50;
+    transition: all 0.2s ease;
+    margin-left: 8px;
     color: white;
 }
-.notification.error {
-    background-color: #f44336;
-    color: white;
+
+.actions-cell button:first-child {
+    margin-left: 0;
 }
-.notification.fade-out {
-    opacity: 0;
+
+.actions-cell a button { /* Botón Editar */
+    background-color: #198754; /* Verde */
+}
+.actions-cell a button:hover {
+    background-color: #157347;
+    transform: scale(1.05);
+}
+
+.actions-cell form button { /* Botón Eliminar */
+    background-color: #dc3545; /* Rojo */
+}
+.actions-cell form button:hover {
+    background-color: #bb2d3b;
+    transform: scale(1.05);
 }
 
 
-/* --- Estilos para Modo Oscuro --- */
-body.dark-mode {
-    background-color: #1e1e1e;
-    color: #eee;
-}
+/* ================================================================== */
+/* Modal y Notificaciones
+/* ================================================================== */
+.overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 990; }
+.edit-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; background-color: #ffffff; width: 90%; max-width: 450px; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); max-height: 95vh; overflow-y: auto; box-sizing: border-box; }
+.edit-popup h2 { color: #388e3c; font-size: 24px; margin-top: 0; margin-bottom: 25px; text-align: center; }
+.edit-popup form { display: flex; flex-direction: column; gap: 15px; }
+.edit-popup label { color: #555; font-size: 1rem; font-weight: 500; }
+.edit-popup input[type="text"], .edit-popup input[type="email"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem; box-sizing: border-box; transition: border-color 0.3s ease-in-out; }
+.edit-popup input[type="text"]:focus, .edit-popup input[type="email"]:focus { border-color: #4caf50; outline: none; box-shadow: 0 0 5px rgba(76, 175, 80, 0.3); }
+.edit-popup button[type="submit"] { background-color: #4caf50; color: #ffffff; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-size: 1rem; font-weight: 500; transition: background-color 0.3s ease-in-out; margin-top: 10px; }
+.edit-popup button[type="submit"]:hover { background-color: #388e3c; }
+.edit-popup a { color: #757575; text-decoration: none; text-align: center; display: block; font-size: 1rem; margin-top: 15px; transition: color 0.3s ease-in-out; }
+.edit-popup a:hover { color: #2e7d32; }
 
-body.dark-mode .table-container {
-    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
-}
+.notification { padding: 10px 20px; border-radius: 5px; font-weight: bold; transition: opacity 0.5s ease-in-out; position: fixed; top: 20px; right: 20px; max-width: 350px; text-align: center; z-index: 1000; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); opacity: 1; }
+.notification.success { background-color: #4CAF50; color: white; }
+.notification.error { background-color: #f44336; color: white; }
 
-body.dark-mode table {
-    background-color: #333;
-    color: #181010;
-}
+/* ================================================================== */
+/* MODO OSCURO (Estilos base)
+/* ================================================================== */
+body.dark-mode { background-color: #121212; color: #e0e0e0; }
+body.dark-mode h2 { color: #f5f5f5; }
+body.dark-mode #searchInput { background-color: #2d2d2d; color: #e0e0e0; border-color: #444; }
+body.dark-mode #searchInput:focus { border-color: #4CAF50; box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.25); }
+body.dark-mode .back-btn { background-color: #424242; }
+body.dark-mode .back-btn:hover { background-color: #535353; }
+body.dark-mode .add-btn { background-color: #4CAF50; }
+body.dark-mode .add-btn:hover { background-color: #5cb85c; }
+body.dark-mode #instructorsTable { background-color: #1e1e1e; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); }
+body.dark-mode #instructorsTable th { color: #9e9e9e; border-bottom: 2px solid #333; }
+body.dark-mode #instructorsTable tr { border-bottom: 1px solid #333; }
+body.dark-mode #instructorsTable tr:hover { background-color: #2a2a2a; }
+body.dark-mode #instructorsTable td { color: #e0e0e0; }
+body.dark-mode #instructorsTable td:first-child { color: #ffffff; }
+body.dark-mode .actions-cell a button { background-color: #20c997; color: #121212; }
+body.dark-mode .actions-cell a button:hover { background-color: #1baa80; }
+body.dark-mode .actions-cell form button { background-color: #f44336; }
+body.dark-mode .actions-cell form button:hover { background-color: #d32f2f; }
+body.dark-mode .overlay { background-color: rgba(0, 0, 0, 0.8); }
+body.dark-mode .edit-popup { background-color: #2d2d2d; }
+body.dark-mode .edit-popup h2 { color: #4CAF50; }
+body.dark-mode .edit-popup label { color: #bdbdbd; }
+body.dark-mode .edit-popup input[type="text"], body.dark-mode .edit-popup input[type="email"] { background-color: #333; color: #e0e0e0; border-color: #555; }
+body.dark-mode .edit-popup input[type="text"]:focus, body.dark-mode .edit-popup input[type="email"]:focus { border-color: #4CAF50; }
+body.dark-mode .edit-popup button[type="submit"] { background-color: #4CAF50; }
+body.dark-mode .edit-popup button[type="submit"]:hover { background-color: #45a049; }
+body.dark-mode .edit-popup a { color: #bdbdbd; }
+body.dark-mode .edit-popup a:hover { color: #4CAF50; }
 
-body.dark-mode th {
-    background-color: #555;
-    color: #fff;
-}
-
-body.dark-mode td {
-    border-bottom-color: #555;
-}
-
-body.dark-mode tbody tr:nth-child(odd) {
-    background-color: #444;
-}
-
-body.dark-mode tbody tr:hover {
-    background-color: #666;
-}
-
-body.dark-mode .edit-popup {
-    background-color: #444;
-    color: #eee;
-    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
-}
-
-body.dark-mode .edit-popup h2 {
-    color: #a5d6a7;
-}
-
-body.dark-mode .edit-popup label {
-    color: #bbb;
-}
-
-body.dark-mode .edit-popup input[type="text"],
-body.dark-mode .edit-popup input[type="email"],
-body.dark-mode .edit-popup select {
-    background-color: #555;
-    color: #2c1d1d;
-    border-color: #666;
-}
-body.dark-mode .edit-popup input[type="text"]:focus,
-body.dark-mode .edit-popup input[type="email"]:focus,
-body.dark-mode .edit-popup select:focus {
-    border-color: #81c784;
-}
-
-body.dark-mode .edit-popup button[type="submit"] {
-    background-color: #66bb6a;
-}
-
-body.dark-mode .edit-popup button[type="submit"]:hover {
-    background-color: #81c784;
-}
-
-body.dark-mode .edit-popup a {
-    color: #bbb;
-}
-
-body.dark-mode .edit-popup a:hover {
-    color: #a5d6a7;
-}
-
-body.dark-mode .notification.success {
-    background-color: #66bb6a;
-    color: #1e1e1e;
-}
-
-body.dark-mode .notification.error {
-    background-color: #ef5350;
-    color: #1e1e1e;
-}
-
-body.dark-mode .search-container input {
-    background-color: #555;
-    color: #eee;
-    border-color: #666;
-}
-
-body.dark-mode .search-container input:focus {
-    border-color: #81c784;
-}
-
-body.dark-mode .back-btn {
-    background-color: #555;
-}
-body.dark-mode .back-btn:hover {
-    background-color: #777;
-}
-
-body.dark-mode #instructorsTable td a button {
-    background-color: #66bb6a;
-    color: #1e1e1e;
-}
-body.dark-mode #instructorsTable td a button:hover {
-    background-color: #81c784;
-}
-
-body.dark-mode #instructorsTable td form button[type="submit"] {
-    background-color: #ef5350;
-    color: #1e1e1e;
-}
-
-body.dark-mode #instructorsTable td form button[type="submit"]:hover {
-    background-color: #e57373;
-}
-
-/* Media query para pantallas pequeñas */
+/* ================================================================== */
+/* Estilos Responsivos y Modo Oscuro Combinados
+/* ================================================================== */
 @media (max-width: 768px) {
-    body {
-        padding: 10px;
+    #instructorsTable thead {
+        display: none;
     }
-
+    #instructorsTable, #instructorsTable tbody, #instructorsTable tr, #instructorsTable td {
+        display: block;
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+    #instructorsTable tr {
+        margin-bottom: 15px;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        background-color: #ffffff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    #instructorsTable td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        border-bottom: 1px dashed #e9ecef;
+    }
+    #instructorsTable td:last-child {
+        border-bottom: none;
+    }
+    #instructorsTable td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: calc(50% - 30px);
+        text-align: left;
+        font-weight: 600;
+        color: #6c757d;
+    }
+    .actions-cell {
+        padding-left: 15px !important;
+        justify-content: center !important;
+        padding-top: 20px !important;
+        padding-bottom: 20px !important;
+    }
+    .actions-cell::before {
+        content: "";
+    }
     .search-container {
         flex-direction: column;
         align-items: stretch;
-        gap: 10px;
-        margin-top: 0; /* Eliminar margen negativo en pantallas pequeñas */
     }
-
-     #searchInput {
-         max-width: 100%;
-         margin-right: 0;
-     }
-
-    .back-btn {
+    .action-buttons {
+        flex-direction: column;
         width: 100%;
-        text-align: center;
+    }
+    .back-btn, .add-btn {
+        width: 100%;
+        justify-content: center;
     }
 
-     #instructorsTable th,
-     #instructorsTable td {
-         padding: 10px; /* Considerar mantener este padding o ajustarlo */
-     }
-
-    .edit-popup {
-        width: 95%;
-        max-width: 95%;
-        padding: 20px;
-        margin: 10px;
+    
+    body.dark-mode #instructorsTable tr {
+        border-color: #333;
+        background-color: #1e1e1e;
     }
-
-    .edit-popup h2 {
-        font-size: 20px;
-        margin-bottom: 15px;
+    body.dark-mode #instructorsTable td {
+        border-bottom-color: #333;
     }
-
-    .edit-popup form {
-        gap: 10px;
+    body.dark-mode #instructorsTable td::before {
+        color: #9e9e9e;
     }
-
-    .edit-popup button[type="submit"] {
-         padding: 10px;
-    }
+    
 }
