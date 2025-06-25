@@ -1,0 +1,101 @@
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #357018, #09ac2c);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 40px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            box-sizing: border-box;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .form-container h2 {
+            color: #333;
+            font-size: 26px;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+            transition: color 0.3s ease;
+        }
+
+        .form-container input[type="password"] {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 2px solid #e9e9e9;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-container input[type="password"]:focus {
+            outline: none;
+            border-color: #09ac2c;
+            box-shadow: 0 0 0 4px rgba(9, 172, 44, 0.1);
+        }
+
+        .form-container input[type="password"]:focus + i {
+            color: #09ac2c;
+        }
+
+        .form-container button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #357018, #09ac2c);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(9, 172, 44, 0.3);
+        }
+        
+        #submit-btn .fa-spinner {
+            margin-right: 8px;
+        }

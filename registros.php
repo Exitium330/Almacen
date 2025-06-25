@@ -5,7 +5,7 @@
     <link rel="icon" href="Img/icono_proyecto.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Instructores</title>
-    <link rel="stylesheet" href="css/registro.css?v=?php echo time(); ?>">
+    <link rel="stylesheet" href="Css/registro.css">
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {

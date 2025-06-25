@@ -4,6 +4,7 @@ include('requiere_login.php');
 
 include("conexion.php");
 
+
 if ($conn->connect_error) {
     error_log("Error de conexión: " . $conn->connect_error, 3, "error_log.txt");
     die("❌ Error de conexión, intente más tarde.");

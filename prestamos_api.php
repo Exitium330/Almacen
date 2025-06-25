@@ -25,6 +25,17 @@ function log_change($conn, $id_usuario, $tabla_afectada, $accion, $id_registro, 
     }
 }
 
+// --- FUNCIÓN AUXILIAR AÑADIDA ---
+function isInstructorActive($conn, $id_instructor) {
+    $stmt = $conn->prepare("SELECT activo FROM instructores WHERE id_instructor = ?");
+    if (!$stmt) return false;
+    $stmt->bind_param("i", $id_instructor);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+    return $result && $result['activo'] == 1;
+}
+
 $action = $_REQUEST['action'] ?? '';
 
 switch ($action) {
@@ -33,6 +44,13 @@ switch ($action) {
         $id_equipos_array = $_POST['id_equipos'] ?? [];
         $id_instructor_prestamo = $_POST['id_instructor'] ?? '';
         $fecha_prestamo_actual = date('Y-m-d H:i:s');
+
+        // --- VALIDACIÓN AÑADIDA ---
+        if (!isInstructorActive($conn, $id_instructor_prestamo)) {
+            echo json_encode(['success' => false, 'message' => 'El instructor seleccionado no está activo o no existe. No se puede realizar el préstamo.']);
+            exit;
+        }
+        // --- FIN VALIDACIÓN ---
 
         if (empty($id_equipos_array) || !is_array($id_equipos_array) || empty($id_instructor_prestamo)) {
             echo json_encode(['success' => false, 'message' => 'Datos incompletos: se requieren equipos e instructor.']);
@@ -104,6 +122,13 @@ switch ($action) {
         $cantidad_material_prestamo = $_POST['cantidad'] ?? 0;
         $fecha_prestamo_material_sql = date('Y-m-d H:i:s'); 
 
+        // --- VALIDACIÓN AÑADIDA ---
+        if (!isInstructorActive($conn, $id_instructor_material)) {
+            echo json_encode(['success' => false, 'message' => 'El instructor seleccionado no está activo o no existe. No se puede realizar el préstamo.']);
+            exit;
+        }
+        // --- FIN VALIDACIÓN ---
+
         if (empty($id_material_prestamo) || empty($id_instructor_material) || !is_numeric($cantidad_material_prestamo) || $cantidad_material_prestamo <= 0) {
             echo json_encode(['success' => false, 'message' => 'Datos incompletos o cantidad no válida.']);
             exit;
@@ -154,7 +179,7 @@ switch ($action) {
             echo json_encode(['success' => false, 'message' => $e->getMessage()]);
         }
         break;
-
+    
     case 'list_active_loans': 
         // ... (código existente sin cambios)
         $equipos_pendientes_raw = [];
@@ -592,7 +617,12 @@ switch ($action) {
         break;
 
     case 'list_devoluciones':
-        // ... (código existente sin cambios)
+        // INICIO: MODIFICACIÓN PARA PAGINACIÓN
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+        $offset = ($page - 1) * $limit;
+        // FIN: MODIFICACIÓN PARA PAGINACIÓN
+
         error_log("API Action: list_devoluciones iniciada."); 
 
         $search_instructor = trim($_GET['search_instructor_nombre'] ?? '');
@@ -768,7 +798,23 @@ switch ($action) {
                 return strtotime($b['fecha_devolucion']) - strtotime($a['fecha_devolucion']); 
             });
         }
-        echo json_encode(['success' => true, 'returns' => $lista_historial_combinado]);
+        
+        // INICIO: MODIFICACIÓN PARA PAGINACIÓN
+        $total_records = count($lista_historial_combinado);
+        $paginated_results = array_slice($lista_historial_combinado, $offset, $limit);
+        $total_pages = ceil($total_records / $limit);
+
+        echo json_encode([
+            'success' => true, 
+            'returns' => $paginated_results,
+            'pagination' => [
+                'total_records' => $total_records,
+                'current_page' => $page,
+                'limit' => $limit,
+                'total_pages' => $total_pages
+            ]
+        ]);
+        // FIN: MODIFICACIÓN PARA PAGINACIÓN
         break;
 
     case 'update_loan': 

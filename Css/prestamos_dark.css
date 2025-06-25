@@ -1,0 +1,282 @@
+/* ============================================== */
+/* ========= ESTILOS MODO OSCURO - PRESTAMOS ==== */
+/* ============================================== */
+
+body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+/* --- Contenedor Principal y Encabezados --- */
+body.dark-mode .container {
+    background-color: #1e1e1e !important;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    border: 1px solid #333 !important;
+}
+
+body.dark-mode h1,
+body.dark-mode h2 {
+    color: #4CAF50; /* Verde característico */
+}
+
+body.dark-mode h2 {
+    border-bottom-color: #333;
+}
+
+/* --- Botón Toggle Modo Oscuro --- */
+body.dark-mode #darkModeToggle {
+    background-color: #333;
+    color: #ffc107; /* Amarillo para el sol */
+    border: 1px solid #ffc107;
+}
+
+/* --- Pestañas de Navegación --- */
+body.dark-mode .nav-tabs {
+    border-bottom-color: #333;
+}
+
+body.dark-mode .nav-tabs .nav-link {
+    background-color: #2d2d2d;
+    color: #bdbdbd;
+    border-color: #333;
+}
+
+body.dark-mode .nav-tabs .nav-link:hover:not(.active) {
+    background-color: #333;
+    border-color: #444;
+}
+
+body.dark-mode .nav-tabs .nav-link.active {
+    background-color: #4CAF50;
+    color: #ffffff;
+    border-color: #4CAF50;
+}
+
+body.dark-mode .tab-content {
+    border-color: #333 !important;
+    background-color: #1e1e1e !important;
+}
+
+/* --- Formularios y Secciones --- */
+body.dark-mode .form-section, 
+body.dark-mode .table-section {
+    background-color: #2a2a2a !important;
+    border-color: #333 !important;
+}
+
+body.dark-mode .bg-light {
+    background-color: #2a2a2a !important;
+}
+
+
+body.dark-mode .form-label {
+    color: #bdbdbd;
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+    background-color: #333;
+    color: #e0e0e0;
+    border-color: #555;
+}
+
+body.dark-mode .form-control:focus,
+body.dark-mode .form-select:focus {
+    background-color: #333;
+    color: #e0e0e0;
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
+}
+
+body.dark-mode .form-control::placeholder {
+  color: #888;
+}
+
+/* --- Estilos para Select2 (Librería de Búsqueda) --- */
+body.dark-mode .select2-container--bootstrap-5 .select2-selection {
+    background-color: #333;
+    border-color: #555;
+    color: #e0e0e0;
+}
+
+body.dark-mode .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
+    color: #f0f0f0;
+    background-color: #555;
+}
+body.dark-mode .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+    color: #f0f0f0;
+}
+
+body.dark-mode .select2-container--bootstrap-5.select2-container--focus .select2-selection,
+body.dark-mode .select2-container--bootstrap-5.select2-container--open .select2-selection {
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
+}
+
+body.dark-mode .select2-container--bootstrap-5 .select2-dropdown {
+    background-color: #2a2a2a;
+    border-color: #555;
+}
+
+body.dark-mode .select2-search--dropdown .select2-search__field {
+    background-color: #333;
+    color: #e0e0e0;
+    border-color: #555;
+}
+
+body.dark-mode .select2-results__option {
+    color: #e0e0e0;
+}
+
+body.dark-mode .select2-results__option--highlighted {
+    background-color: #4CAF50 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .select2-results__option[aria-selected=true] {
+    background-color: #0a6640; /* Verde más oscuro para seleccionados */
+}
+
+/* --- Botones --- */
+body.dark-mode .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+body.dark-mode .btn-primary:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
+body.dark-mode .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+body.dark-mode .btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+/* --- Tablas --- */
+body.dark-mode .table {
+    color: #e0e0e0;
+    border-color: #333;
+}
+
+/* MODIFICADO: Selector más específico para forzar el estilo de la cabecera */
+body.dark-mode .table > thead > tr > th {
+    background-color: #0A6640 !important;
+    color: #ffffff !important;
+    border-color: #0A6640 !important;
+}
+
+body.dark-mode .table tbody tr > * {
+    background-color: #2a2a2a !important;
+}
+
+body.dark-mode .table tbody tr td {
+    color: #e0e0e0;
+}
+
+body.dark-mode .table-striped>tbody>tr:nth-of-type(odd)>* {
+    background-color: #252525 !important;
+}
+
+body.dark-mode .table-hover>tbody>tr:hover>* {
+    background-color: #333 !important;
+    color: #fff !important;
+}
+
+/* --- Estilos para Tablas Desplegables en Historial --- */
+body.dark-mode tr.table-group-header > * {
+    background-color: #3a3a3a !important;
+    border-bottom-color: #4CAF50 !important;
+}
+
+body.dark-mode .table-group-item td,
+body.dark-mode .table-group-item td small {
+    background-color: #2f2f2f !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .collapse .table-light {
+     background-color: #404040 !important;
+     color: #f0f0f0 !important;
+}
+body.dark-mode .collapse .table-light th small {
+    color: #f0f0f0 !important;
+}
+
+
+/* --- Modales --- */
+body.dark-mode .modal-content {
+    background-color: #2d2d2d;
+    border-color: #444;
+    color: #e0e0e0;
+}
+
+body.dark-mode .modal-body {
+    background-color: #2d2d2d;
+}
+
+body.dark-mode .modal-header {
+    border-bottom-color: #444;
+}
+body.dark-mode .modal-header .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+body.dark-mode .modal-footer {
+    border-top-color: #444;
+}
+
+/* --- Notificaciones (Alerts de Bootstrap) --- */
+body.dark-mode .alert {
+    border: none;
+    color: #121212;
+}
+
+body.dark-mode .alert-success { background-color: #20c997; }
+body.dark-mode .alert-danger { background-color: #ff5252; }
+body.dark-mode .alert-warning { background-color: #ffab40; }
+body.dark-mode .alert-info { background-color: #40c4ff; }
+
+/* --- Detalles específicos --- */
+body.dark-mode #detalle_items_devolucion_grupo_container .item-devolucion-info {
+    background-color: #333;
+    border-color: #444;
+}
+body.dark-mode #detalle_items_devolucion_grupo_container .item-devolucion-info h6 {
+    color: #4CAF50;
+}
+
+body.dark-mode #detalle_items_devolucion_grupo_container .text-muted {
+    color: #888 !important;
+}
+
+/* ============================================== */
+/* ==== ESTILOS PAGINACIÓN MODO OSCURO (NUEVO) ==== */
+/* ============================================== */
+
+body.dark-mode .pagination .page-link {
+    background-color: #333;
+    color: #e0e0e0;
+    border-color: #555;
+}
+
+body.dark-mode .pagination .page-link:hover {
+    background-color: #444;
+    color: #fff;
+    border-color: #666;
+}
+
+body.dark-mode .pagination .page-item.active .page-link {
+    background-color: #4CAF50; /* Verde característico del tema */
+    border-color: #4CAF50;
+    color: #ffffff;
+    z-index: 3;
+}
+
+body.dark-mode .pagination .page-item.disabled .page-link {
+    background-color: #2a2a2a;
+    color: #777;
+    border-color: #555;
+}

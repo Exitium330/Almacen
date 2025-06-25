@@ -1,22 +1,15 @@
 <?php
 
-include('requiere_login.php'); // ¡Esta es la clave!
-// ... el resto de tu código
+include('requiere_login.php'); 
 
-// Habilitar la salida de errores temporalmente para depuración
+include('conexion.php');
+
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 
-// Conexión a la base de datos
-$conn = new mysqli("localhost", "root", "1027802491", "proyecto_almacen");
-if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
-}
-$conn->set_charset('utf8');
-
-// Verificar si las tablas existen
 $required_tables = ['equipos', 'materiales', 'historial_cambios', 'almacenistas'];
 foreach ($required_tables as $table) {
     $result = $conn->query("SHOW TABLES LIKE '$table'");
@@ -25,9 +18,9 @@ foreach ($required_tables as $table) {
     }
 }
 
-// Simular un usuario logueado
+
 if (!isset($_SESSION['id_usuario'])) {
-    $_SESSION['id_usuario'] = 1; // Simulamos un usuario con ID 1
+    $_SESSION['id_usuario'] = 1; 
 }
 $id_usuario = (int)$_SESSION['id_usuario'];
 

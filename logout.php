@@ -55,6 +55,7 @@ if ($conn && $conn->ping()) {
 
 
 // Redirigir al usuario a la página de inicio de sesión
-header("Location: login.php"); // La sintaxis correcta es sin 'header:'
+// CAMBIO AQUÍ: Añadimos el parámetro para que login.php sepa que debe mostrar la alerta.
+header("Location: login.php?logout=1"); 
 exit();
 ?>

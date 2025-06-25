@@ -1,12 +1,9 @@
 <?php
 include('requiere_login.php');
 
-
 // === Seguridad: Verificar autenticación y rol de administrador ===
-// Es crucial que esta verificación esté al principio de CADA script de administración
 if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['es_admin']) || $_SESSION['es_admin'] != 1) {
-    // Si no está logeado, no tiene el estado admin en sesión o no es admin
-    header("Location: index.php"); // Redirigir al index o a una página de acceso denegado
+    header("Location: index.php");
     exit();
 }
 
@@ -18,7 +15,7 @@ if ($conn->connect_error) {
     die("❌ Error de conexión a la base de datos, intente más tarde.");
 }
 
-// --- Lógica para obtener mensajes de estado de las operaciones CRUD/Contraseña ---
+// --- Lógica para obtener mensajes de estado ---
 $mensaje_estado = "";
 if (isset($_GET['status'])) {
     $status = $_GET['status'];
@@ -88,155 +85,88 @@ if ($resultado_todos) {
             padding: 0;
             background-color: #f4f4f4;
             color: #333;
+            transition: background-color 0.3s, color 0.3s;
         }
         .admin-container {
             max-width: 1000px;
             margin: 20px auto;
-            padding: 20px; /* Padding del contenedor */
+            padding: 20px;
             background: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            position: relative; /* <--- AÑADIDO: para el posicionamiento absoluto del hijo */
+            position: relative;
         }
-        /* Ya no se necesita .back-link-container si el <a> es hijo directo */
-        
+        .top-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
         .admin-container h1, .admin-container h2 {
             color:rgb(37, 43, 49);
             border-bottom: 2px solid #eee;
             padding-bottom: 10px;
             margin-bottom: 20px;
         }
-        .message {
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
+        .admin-container h1 {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
         }
-        .message.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .message.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .crud-links a {
-            margin-right: 10px;
-            text-decoration: none;
-            color:rgb(23, 109, 49);
-        }
-        .crud-links a:hover {
-            text-decoration: underline;
-        }
-        .add-button {
-            display: inline-block;
-            margin-bottom: 20px;
-            padding: 10px 15px;
-            background-color: #28a745;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .add-button:hover {
-            background-color: #218838;
-        }
-        .password-form {
-            margin-bottom: 30px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-            max-width: 400px;
-        }
-        .password-form label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .password-form input[type="password"] {
-            width: calc(100% - 16px);
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .password-form button {
-            padding: 10px 15px;
-            background-color:rgb(20, 145, 62);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .password-form button:hover {
-            background-color:rgb(11, 105, 58);
-        }
-
-        .back-link {
-            /* display: inline-block; Ya no es necesario si es position: absolute, pero no daña */
-            padding: 8px 10px;
-            background-color: #4caf50;
-            color: #ffffff;
-            border: none;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-            
-            position: absolute; /* <--- AÑADIDO */
-            top: 20px;          /* <--- AÑADIDO (ajusta según el padding de .admin-container) */
-            right: 20px;         /* <--- AÑADIDO (ajusta según el padding de .admin-container) */
-            /* text-align: right; <--- ELIMINADO: no es necesario aquí */
-        }
-        .back-link:hover {
-            background-color:hsl(123, 42.90%, 28.80%);
-        }
+        .message { padding: 10px; margin-bottom: 15px; border-radius: 5px; }
+        .message.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .message.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table, th, td { border: 1px solid #ddd; }
+        th, td { padding: 10px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .crud-links a { margin-right: 10px; text-decoration: none; color:rgb(23, 109, 49); }
+        .crud-links a:hover { text-decoration: underline; }
+        .add-button { display: inline-block; margin-bottom: 20px; padding: 10px 15px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; }
+        .add-button:hover { background-color: #218838; }
+        .password-form { margin-bottom: 30px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; max-width: 400px; }
+        .password-form label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .password-form input[type="password"] { width: calc(100% - 16px); padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .password-form button { padding: 10px 15px; background-color:rgb(20, 145, 62); color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .password-form button:hover { background-color:rgb(11, 105, 58); }
+        .back-link { padding: 8px 12px; background-color: #4caf50; color: #ffffff; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: 500; transition: background-color 0.3s; }
+        .back-link:hover { background-color:hsl(123, 42.90%, 28.80%); }
+    </style>
+    
+    <style>
+        body.dark-mode { background-color: #121212; color: #e0e0e0; }
+        body.dark-mode .admin-container { background: #1e1e1e; box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); border: 1px solid #333; }
+        body.dark-mode .top-controls { border-bottom-color: #333; }
+        body.dark-mode h1, body.dark-mode h2 { color: #4CAF50; border-bottom-color: #333; }
+        body.dark-mode .message.success { background-color: #1a3a24; color: #a7d7b8; border: 1px solid #2a5c3d; }
+        body.dark-mode .message.error { background-color: #441c22; color: #f5c6cb; border: 1px solid #721c24; }
+        body.dark-mode table, body.dark-mode th, body.dark-mode td { border-color: #444; }
+        body.dark-mode th { background-color: #2c2c2c; }
+        body.dark-mode tr:nth-child(even) { background-color: #232323; }
+        body.dark-mode .crud-links a { color: #66b3ff; }
+        body.dark-mode .password-form { background-color: #2a2a2a; border-color: #444; }
+        body.dark-mode .password-form input[type="password"] { background-color: #333; border-color: #555; color: #e0e0e0; }
+        body.dark-mode footer.pie { background-color: #1e1e1e; color: #aaa; border-top: 1px solid #333; }
     </style>
 </head>
 <body>
 
     <div class="admin-container">
-        <a href="index.php" class="back-link">← Volver al Menú Principal</a>
-        
-        <h1>Panel de Administración de Almacenistas</h1>
+        <div class="top-controls">
+            <h1>Panel de Administración de Almacenistas</h1>
+            <a href="index.php" class="back-link">← Volver al Menú</a>
+        </div>
         
         <?php echo $mensaje_estado; ?>
 
         <h2>Cambiar mi Contraseña</h2>
         <form class="password-form" method="POST" action="cambiar_contrasena_admin_process.php">
-            <div>
-                <label for="contrasena_actual">Contraseña Actual:</label>
-                <input type="password" id="contrasena_actual" name="contrasena_actual" required>
-            </div>
-            <div>
-                <label for="nueva_contrasena">Nueva Contraseña:</label>
-                <input type="password" id="nueva_contrasena" name="nueva_contrasena" required>
-            </div>
-            <div>
-                <label for="confirmar_contrasena">Confirmar Nueva Contraseña:</label>
-                <input type="password" id="confirmar_contrasena" name="confirmar_contrasena" required>
-            </div>
+            <div><label for="contrasena_actual">Contraseña Actual:</label><input type="password" id="contrasena_actual" name="contrasena_actual" required></div>
+            <div><label for="nueva_contrasena">Nueva Contraseña:</label><input type="password" id="nueva_contrasena" name="nueva_contrasena" required></div>
+            <div><label for="confirmar_contrasena">Confirmar Nueva Contraseña:</label><input type="password" id="confirmar_contrasena" name="confirmar_contrasena" required></div>
             <button type="submit">Actualizar Contraseña</button>
         </form>
 
@@ -247,14 +177,7 @@ if ($resultado_todos) {
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nombres</th>
-                        <th>Apellidos</th>
-                        <th>Usuario</th>
-                        <th>Estado</th>
-                        <th>Es Admin</th>
-                        <th>Hora Ingreso</th>
-                        <th>Acciones</th>
+                        <th>ID</th><th>Nombres</th><th>Apellidos</th><th>Usuario</th><th>Estado</th><th>Es Admin</th><th>Hora Ingreso</th><th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -287,6 +210,16 @@ if ($resultado_todos) {
     <footer class="pie">
         © 2025 Almacén SENA. Todos los derechos reservados.
     </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Al cargar la página, simplemente aplica la clase 'dark-mode' al cuerpo
+        // si la configuración global está activada en localStorage.
+        if (localStorage.getItem('modoOscuro') === 'enabled') {
+            document.body.classList.add('dark-mode');
+        }
+    });
+    </script>
 
 </body>
 </html>

@@ -3,7 +3,7 @@ include('requiere_login.php');
 require_once 'conexion.php'; 
 
 if (!isset($_SESSION['id_usuario'])) {
-    // Manejo si no hay sesión
+   
 }
 $id_almacenista = $_SESSION['id_usuario'] ?? null; 
 
@@ -18,7 +18,8 @@ function getAvailableEquipment($conn) {
 }
 
 function getInstructors($conn) {
-    $sql = "SELECT id_instructor, nombre, apellido FROM instructores ORDER BY nombre, apellido ASC";
+    // MODIFICADO: Se añade la condición para que solo traiga instructores activos
+    $sql = "SELECT id_instructor, nombre, apellido FROM instructores WHERE activo = 1 ORDER BY nombre, apellido ASC";
     $result = $conn->query($sql);
     $instructors = [];
     if ($result) { while ($row = $result->fetch_assoc()) { $instructors[] = $row; } }
@@ -51,6 +52,7 @@ $conn->close();
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="Css/prestamos_dark.css?v=<?php echo time(); ?>">
     <style>
         :root {
             --pastel-green: #C8E6C9; 
@@ -102,14 +104,35 @@ $conn->close();
         .list-unstyled li {font-size: 0.9rem;}
         .align-middle {vertical-align: middle !important;}
 
-        .container .top-right-image {
+        .top-right-controls {
             position: absolute;
             top: 15px; 
             right: 15px; 
-            width: 80px; 
-            height: auto;
+            display: flex;
+            align-items: center;
+            gap: 15px;
             z-index: 1000;
         }
+
+        .top-right-controls .logo {
+            width: 80px; 
+            height: auto;
+        }
+
+        #darkModeToggle {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #212529; /* Color del icono de luna */
+        }
+        
         .action-buttons-group {
             display: flex;
             flex-wrap: wrap;
@@ -119,6 +142,26 @@ $conn->close();
         }
         .action-buttons-group .btn { 
             flex-grow: 0; 
+        }
+
+        /* ESTILOS PARA EL BOTÓN VOLVER (AÑADIDO) */
+        .btn-volver {
+            position: absolute;
+            top: 25px; /* Alineado con los controles de la derecha */
+            left: 30px; /* Espacio del padding del container */
+            background-color: var(--pine-green);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            border: none;
+            z-index: 10;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-volver:hover {
+            background-color: #085533; /* Darker pine green */
         }
 
         #detalle_items_devolucion_grupo_container .item-devolucion-info h6 {
@@ -158,13 +201,28 @@ $conn->close();
             padding: 0 !important;
             border-top: none !important;
         }
+        /* Estilos para paginación */
+        .pagination .page-link {
+            cursor: pointer;
+        }
+        .pagination .page-item.disabled .page-link {
+            cursor: not-allowed;
+            pointer-events: all !important;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <img src="img/sena.png" alt="Logo Sena" class="top-right-image">
-
-        <h1>📊 Gestión de Préstamos y Devoluciones</h1>
+        <div class="top-right-controls">
+            <button id="darkModeToggle" title="Cambiar modo oscuro/claro">
+                <i class="fas fa-moon"></i>
+            </button>
+            <img src="Img/sena.png" alt="Logo Sena" class="logo">
+        </div>
+        
+        <a href="index.php" class="btn-volver">&larr; Volver</a>
+        
+        <h1 style="margin-top: 40px;">📊 Gestión de Préstamos y Devoluciones</h1>
 
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
@@ -361,7 +419,10 @@ $conn->close();
                             </tbody>
                         </table>
                     </div>
-                </div>
+                    <div class="d-flex justify-content-center mt-3">
+                        <nav id="pagination-container"></nav>
+                    </div>
+                    </div>
             </div>
         </div>
     </div>
@@ -487,6 +548,8 @@ $conn->close();
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
+        // El script existente para la lógica de préstamos va aquí (sin cambios)
+        // ...
         const API_URL = 'prestamos_api.php';
         let globalAllAvailableEquipment = <?= json_encode($availableEquipment) ?>; 
         const ID_ALMACENISTA_LOGUEADO = <?= $id_almacenista ?? 'null' ?>;
@@ -589,7 +652,10 @@ $conn->close();
                      updateAvailableEquipmentDropdowns(); 
                      updateAvailableMaterialsDropdown();
                 } else if (e.target.id === 'historial-tab') {
-                    fetchAndDisplayReturnHistory(); 
+                    // MODIFICADO: Llama con página 1 por defecto al cambiar a la pestaña
+                    if ($('#returnList').find('tr').length <= 1) { // Evita recargar si ya hay datos
+                        fetchAndDisplayReturnHistory({}, 1); 
+                    }
                 } else {
                     if (window.timerInterval) {
                         clearInterval(window.timerInterval);
@@ -603,7 +669,8 @@ $conn->close();
             } else if (activeTabId === 'devolver-tab') {
                 loadReturnDropdowns();
             } else if (activeTabId === 'historial-tab') {
-                 fetchAndDisplayReturnHistory();
+                // MODIFICADO: Carga inicial de la página 1 del historial si la pestaña está activa
+                 fetchAndDisplayReturnHistory({}, 1);
             }
 
 
@@ -622,20 +689,22 @@ $conn->close();
                 refrescarDetallesGrupoDevolucion();
             });
 
+            // MODIFICADO: Al filtrar, siempre ir a la página 1
              $('#filterReturnHistoryBtn').on('click', function() {
                 const params = {
                     search_instructor_nombre: $('#search_instructor_historial').val().trim(),
                     fecha_desde: $('#fecha_desde_historial').val(),
                     fecha_hasta: $('#fecha_hasta_historial').val()
                 };
-                fetchAndDisplayReturnHistory(params);
+                fetchAndDisplayReturnHistory(params, 1);
             });
 
+            // MODIFICADO: Al resetear, siempre ir a la página 1
             $('#resetReturnHistoryFilterBtn').on('click', function() {
                 $('#search_instructor_historial').val('');
                 $('#fecha_desde_historial').val('');
                 $('#fecha_hasta_historial').val('');
-                fetchAndDisplayReturnHistory(); 
+                fetchAndDisplayReturnHistory({}, 1); 
             });
 
             $('#returnList').on('show.bs.collapse', '.collapse', function () {
@@ -659,6 +728,20 @@ $conn->close();
                 }
             });
 
+            // AÑADIDO: Event listener para la paginación
+            $('#pagination-container').on('click', 'a.page-link', function(e) {
+                e.preventDefault();
+                const page = $(this).data('page');
+                if (!page || $(this).parent().hasClass('disabled') || $(this).parent().hasClass('active')) {
+                    return;
+                }
+                const params = {
+                    search_instructor_nombre: $('#search_instructor_historial').val().trim(),
+                    fecha_desde: $('#fecha_desde_historial').val(),
+                    fecha_hasta: $('#fecha_hasta_historial').val()
+                };
+                fetchAndDisplayReturnHistory(params, page);
+            });
 
         }); // Fin $(document).ready
 
@@ -1360,18 +1443,22 @@ $conn->close();
             timerInterval = setInterval(updateLoanTimers, 1000);
         }
 
-        function fetchAndDisplayReturnHistory(params = {}) {
-            console.log("Fetching history with params:", params);
+        // MODIFICADO: Acepta el número de página como parámetro
+        function fetchAndDisplayReturnHistory(params = {}, page = 1) {
+            console.log("Fetching history with params:", params, "for page:", page);
+            const requestData = { ...params, page: page, limit: 10 }; // Añade paginación a la solicitud
+
             $.ajax({
                 url: API_URL + '?action=list_devoluciones',
                 type: 'GET',
-                data: params,
+                data: requestData,
                 dataType: 'json',
                 beforeSend: function() {
                     $('#returnList').empty().html('<tr><td colspan="7" class="text-center">Cargando historial... <i class="fas fa-spinner fa-spin"></i></td></tr>');
+                    $('#pagination-container').empty(); // Limpia paginación anterior
                 },
                 success: function(response) {
-                    console.log("API Response for list_devoluciones:", JSON.stringify(response, null, 2));
+                    console.log("API Response for list_devoluciones:", response);
                     const listBody = $('#returnList');
                     listBody.empty();
                     let hasIndividualReturns = false;
@@ -1469,6 +1556,11 @@ $conn->close();
                         $toggleBtn.hide();
                     }
 
+                    // AÑADIDO: Renderizar la paginación
+                    if (response.pagination) {
+                        renderPagination(response.pagination);
+                    }
+
                 },
                 error: function(xhr) {
                     showNotification("Error al cargar historial: " + (xhr.responseJSON ? xhr.responseJSON.message : xhr.statusText), "danger");
@@ -1479,6 +1571,66 @@ $conn->close();
             });
         }
 
+        // AÑADIDO: Nueva función para renderizar los controles de paginación
+        function renderPagination(pagination) {
+            const { total_records, current_page, limit, total_pages } = pagination;
+            const paginationContainer = $('#pagination-container');
+            paginationContainer.empty();
+
+            if (total_pages <= 1) {
+                return; 
+            }
+
+            let paginationHtml = '<ul class="pagination shadow-sm">';
+
+            // Botón "Anterior"
+            paginationHtml += `<li class="page-item ${current_page === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" data-page="${current_page - 1}">&laquo; Anterior</a>
+            </li>`;
+
+            // Lógica para mostrar los números de página (ej. 1 ... 4 5 6 ... 10)
+            const pagesToShow = [];
+            const pageRange = 2; // Cuántas páginas mostrar alrededor de la actual
+
+            pagesToShow.push(1); // Siempre mostrar la primera página
+
+            if (current_page > pageRange + 1) {
+                pagesToShow.push('...');
+            }
+
+            for (let i = Math.max(2, current_page - pageRange); i <= Math.min(total_pages - 1, current_page + pageRange); i++) {
+                pagesToShow.push(i);
+            }
+
+            if (current_page < total_pages - pageRange) {
+                pagesToShow.push('...');
+            }
+
+            if (total_pages > 1) {
+                pagesToShow.push(total_pages); // Siempre mostrar la última página
+            }
+            
+            // Eliminar duplicados de los puntos suspensivos
+            const uniquePages = [...new Set(pagesToShow)];
+
+            uniquePages.forEach(page => {
+                if (page === '...') {
+                    paginationHtml += '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                } else {
+                    paginationHtml += `<li class="page-item ${page === current_page ? 'active' : ''}">
+                        <a class="page-link" href="#" data-page="${page}">${page}</a>
+                    </li>`;
+                }
+            });
+
+            // Botón "Siguiente"
+            paginationHtml += `<li class="page-item ${current_page === total_pages ? 'disabled' : ''}">
+                <a class="page-link" href="#" data-page="${current_page + 1}">Siguiente &raquo;</a>
+            </li>`;
+
+            paginationHtml += '</ul>';
+            paginationContainer.html(paginationHtml);
+        }
 
         function updateAvailableEquipmentDropdowns() {
              $.ajax({
@@ -1551,7 +1703,43 @@ $conn->close();
             return String(str).replace(/[&<>"']/g, function(m) { return map[m]; });
         }
     </script>
-</body>
-</html>
-</body>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggleButton = document.getElementById('darkModeToggle');
+        const toggleIcon = toggleButton.querySelector('i');
+        const body = document.body;
+
+        // Función para aplicar el modo oscuro
+        const enableDarkMode = () => {
+            body.classList.add('dark-mode');
+            localStorage.setItem('modoOscuro', 'enabled');
+            toggleIcon.classList.remove('fa-moon');
+            toggleIcon.classList.add('fa-sun');
+        };
+
+        // Función para desactivar el modo oscuro
+        const disableDarkMode = () => {
+            body.classList.remove('dark-mode');
+            localStorage.setItem('modoOscuro', 'disabled');
+            toggleIcon.classList.remove('fa-sun');
+            toggleIcon.classList.add('fa-moon');
+        };
+
+        // Al cargar la página, verificar la preferencia guardada
+        if (localStorage.getItem('modoOscuro') === 'enabled') {
+            enableDarkMode();
+        }
+
+        // Event listener para el botón
+        toggleButton.addEventListener('click', () => {
+            if (body.classList.contains('dark-mode')) {
+                disableDarkMode();
+            } else {
+                enableDarkMode();
+            }
+        });
+    });
+    </script>
+    </body>
 </html>

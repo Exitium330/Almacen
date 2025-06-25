@@ -2,6 +2,8 @@
 session_start();
 include 'conexion.php'; /*Conexión a la base de datos*/
 
+
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") { /*Verifica si el método de la solicitud es POST*/
     $correo = filter_var($_POST['correo'], FILTER_SANITIZE_EMAIL);/*Se obtiene el correo ingresado por el usuario y se sanitiza*/
     $password = $_POST['password'];/*Se obtiene la contraseña ingresada por el usuario*/
@@ -30,7 +32,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { /*Verifica si el método de la solic
         }
     }
     
-    echo "<script>  alert('❌ Usuario o contraseña incorrectos.'); window.location.href='login.php'</script>"; 
+    
+    header("Location: login.php?error=1");
+    exit(); 
 
     $stmt->close();
     $conn->close();
